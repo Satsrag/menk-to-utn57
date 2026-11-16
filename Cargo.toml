@@ -1,0 +1,19 @@
+[package]
+name = "menk-to-utn57"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+description = "Menk PUA shape extraction and UTN #57 positioned written-unit conversion / 孟克编码字形提取与 UTN #57 位置书写单元转换"
+license = "Apache-2.0"
+repository = "https://github.com/Satsrag/menk-to-utn57"
+readme = "README.md"
+keywords = ["mongolian", "unicode", "utn57", "menk"]
+categories = ["text-processing", "internationalization"]
+
+[lib]
+name = "menk_to_utn57"
+path = "src/lib.rs"
+
+[dependencies]
+# Pure-Rust UTN #57 shaping & normalization types / 纯 Rust UTN #57 塑形与归一化类型库
+mongol-norm = "0.4.2"

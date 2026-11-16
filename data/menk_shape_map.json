@@ -1,0 +1,310 @@
+{
+  "A_INIT": {
+    "char": "",
+    "isol": "A:init",
+    "init": "A:init",
+    "medi": "A:init",
+    "fina": "A:init"
+  },
+  "A_FINA": {
+    "char": "",
+    "isol": "A:fina",
+    "init": "A:fina",
+    "medi": "A:fina",
+    "fina": "A:fina"
+  },
+  "Aa": {
+    "char": "",
+    "isol": "Aa:isol",
+    "init": "Aa:fina",
+    "medi": "Aa:fina",
+    "fina": "Aa:fina"
+  },
+  "A_MEDI": {
+    "char": "",
+    "isol": "A:medi",
+    "init": "A:medi",
+    "medi": "A:medi",
+    "fina": "A:medi"
+  },
+  "G": {
+    "char": "",
+    "isol": "I:isol",
+    "init": "G:init",
+    "medi": "G:medi",
+    "fina": "I:fina"
+  },
+  "I_FINA": {
+    "char": "",
+    "isol": "I:fina",
+    "init": "I:fina",
+    "medi": "I:fina",
+    "fina": "I:fina"
+  },
+  "I": {
+    "char": "",
+    "isol": "I:init",
+    "init": "I:init",
+    "medi": "I:medi",
+    "fina": "I:medi"
+  },
+  "B": {
+    "char": "",
+    "isol": "U:isol",
+    "init": "B:init",
+    "medi": "B:medi",
+    "fina": "U:fina"
+  },
+  "O": {
+    "char": "",
+    "isol": "O:init",
+    "init": "O:init",
+    "medi": "O:medi",
+    "fina": "O:fina"
+  },
+  "Ue": {
+    "char": "",
+    "isol": "Ue:fina",
+    "init": "Ue:fina",
+    "medi": "Ue:fina",
+    "fina": "Ue:fina"
+  },
+  "W": {
+    "char": "",
+    "isol": "W:init",
+    "init": "W:init",
+    "medi": "W:medi",
+    "fina": "W:fina"
+  },
+  "N_INIT": {
+    "char": "",
+    "isol": "N:init",
+    "init": "N:init",
+    "medi": "N:init",
+    "fina": "N:init"
+  },
+  "N_FINA": {
+    "char": "",
+    "isol": "N:fina",
+    "init": "N:fina",
+    "medi": "N:fina",
+    "fina": "N:fina"
+  },
+  "N_MEDI": {
+    "char": "",
+    "isol": "N:medi",
+    "init": "N:medi",
+    "medi": "N:medi",
+    "fina": "N:medi"
+  },
+  "B_FINA": {
+    "char": "",
+    "isol": "B:fina",
+    "init": "B:fina",
+    "medi": "B:fina",
+    "fina": "B:fina"
+  },
+  "P": {
+    "char": "",
+    "isol": "P:init",
+    "init": "P:init",
+    "medi": "P:medi",
+    "fina": "P:medi"
+  },
+  "P_FINA": {
+    "char": "",
+    "isol": "P:fina",
+    "init": "P:fina",
+    "medi": "P:fina",
+    "fina": "P:fina"
+  },
+  "H_INIT": {
+    "char": "",
+    "isol": "H:init",
+    "init": "H:init",
+    "medi": "H:init",
+    "fina": "H:init"
+  },
+  "Hx_INIT": {
+    "char": "",
+    "isol": "Hx:init",
+    "init": "Hx:init",
+    "medi": "Hx:init",
+    "fina": "Hx:init"
+  },
+  "Gx": {
+    "char": "",
+    "isol": "Gx:init",
+    "init": "Gx:init",
+    "medi": "Gx:medi",
+    "fina": "Gx:medi"
+  },
+  "H_FINA": {
+    "char": "",
+    "isol": "H:fina",
+    "init": "H:fina",
+    "medi": "H:fina",
+    "fina": "H:fina"
+  },
+  "Hx_FINA": {
+    "char": "",
+    "isol": "Hx:fina",
+    "init": "Hx:fina",
+    "medi": "Hx:fina",
+    "fina": "Hx:fina"
+  },
+  "M_INIT": {
+    "char": "",
+    "isol": "M:init",
+    "init": "M:init",
+    "medi": "M:init",
+    "fina": "M:init"
+  },
+  "M_FINA": {
+    "char": "",
+    "isol": "M:fina",
+    "init": "M:fina",
+    "medi": "M:fina",
+    "fina": "M:fina"
+  },
+  "M_MEDI": {
+    "char": "",
+    "isol": "M:medi",
+    "init": "M:medi",
+    "medi": "M:medi",
+    "fina": "M:medi"
+  },
+  "L_INIT": {
+    "char": "",
+    "isol": "L:init",
+    "init": "L:init",
+    "medi": "L:init",
+    "fina": "L:init"
+  },
+  "L_FINA": {
+    "char": "",
+    "isol": "L:fina",
+    "init": "L:fina",
+    "medi": "L:fina",
+    "fina": "L:fina"
+  },
+  "L_MEDI": {
+    "char": "",
+    "isol": "L:medi",
+    "init": "L:medi",
+    "medi": "L:medi",
+    "fina": "L:medi"
+  },
+  "S": {
+    "char": "",
+    "isol": "S:init",
+    "init": "S:init",
+    "medi": "S:medi",
+    "fina": "S:fina"
+  },
+  "Sh": {
+    "char": "",
+    "isol": "Sh:init",
+    "init": "Sh:init",
+    "medi": "Sh:medi",
+    "fina": "Sh:fina"
+  },
+  "T": {
+    "char": "",
+    "isol": "T:init",
+    "init": "T:init",
+    "medi": "T:medi",
+    "fina": "T:fina"
+  },
+  "D": {
+    "char": "",
+    "isol": "D:init",
+    "init": "D:init",
+    "medi": "D:medi",
+    "fina": "D:fina"
+  },
+  "Ch": {
+    "char": "",
+    "isol": "Ch:init",
+    "init": "Ch:init",
+    "medi": "Ch:medi",
+    "fina": "Ch:fina"
+  },
+  "J": {
+    "char": "",
+    "isol": "J:medi",
+    "init": "J:medi",
+    "medi": "J:medi",
+    "fina": "J:fina"
+  },
+  "Y": {
+    "char": "",
+    "isol": "Y:init",
+    "init": "Y:init",
+    "medi": "Y:medi",
+    "fina": "Y:medi"
+  },
+  "R": {
+    "char": "",
+    "isol": "R:init",
+    "init": "R:init",
+    "medi": "R:medi",
+    "fina": "R:medi"
+  },
+  "K": {
+    "char": "",
+    "isol": "K:init",
+    "init": "K:init",
+    "medi": "K:medi",
+    "fina": "R:fina"
+  },
+  "F": {
+    "char": "",
+    "isol": "F:init",
+    "init": "F:init",
+    "medi": "F:medi",
+    "fina": "F:medi"
+  },
+  "F_FINA": {
+    "char": "",
+    "isol": "F:fina",
+    "init": "F:fina",
+    "medi": "F:fina",
+    "fina": "F:fina"
+  },
+  "K_FINA": {
+    "char": "",
+    "isol": "K:fina",
+    "init": "K:fina",
+    "medi": "K:fina",
+    "fina": "K:fina"
+  },
+  "C": {
+    "char": "",
+    "isol": "C:init",
+    "init": "C:init",
+    "medi": "C:medi",
+    "fina": "C:fina"
+  },
+  "Z": {
+    "char": "",
+    "isol": "Z:init",
+    "init": "Z:init",
+    "medi": "Z:medi",
+    "fina": "Z:fina"
+  },
+  "Hr": {
+    "char": "",
+    "isol": "Zr:init",
+    "init": "Zr:init",
+    "medi": "Hr:medi",
+    "fina": "Hr:fina"
+  },
+  "Rh": {
+    "char": "",
+    "isol": "Rh:init",
+    "init": "Rh:init",
+    "medi": "Rh:medi",
+    "fina": "Rh:fina"
+  }
+}
