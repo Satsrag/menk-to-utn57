@@ -319,15 +319,39 @@ def generate() -> None:
     lines.append("}")
     lines.append("")
 
-    # Group Menk characters by phoneme in codepoint order for `menk_char_letter`.
-    # 按基础字母音位分组（保持码位顺序）以生成 `menk_char_letter`。
+    # Group Menk characters by phoneme in codepoint order for `menk_char_latin` and `menk_char_letter`.
+    # 按基础字母音位分组（保持码位顺序）以生成 `menk_char_latin` 与 `menk_char_letter`。
     latin_groups: dict[str, list[int]] = defaultdict(list)
     for cp in expected_cps:
         latin_groups[cp_latin[cp]].append(cp)
 
+    lines.append("/// Return the single-character Mongolian Latin letter of a Menk PUA character (`U+E264..=U+E34F`),")
+    lines.append("/// matching `MenkCode::getStandardLatin` with unambiguous single-character notation (`ë`, `ŋ`, `ħ`, `ř`, `ł`, `ẑ`, `ĉ`).")
+    lines.append("///")
+    lines.append("/// 获取单个蒙科立字符（`U+E264..=U+E34F`）对应的单字符蒙古文拉丁转写（与 PHP `MenkCode::getStandardLatin` 对应，采用无歧义单字符记法）。")
+    lines.append("pub const fn menk_char_latin(ch: char) -> Option<char> {")
+    lines.append("    match ch {")
+    for latin_val, cps in latin_groups.items():
+        rhs_expr = f"Some('{latin_val}')"
+        rhs_comment = f"'{latin_val}' (U+{ord(latin_val):04X})"
+        if len(cps) == 1:
+            cp = cps[0]
+            lines.append(f"        '{chr(cp)}' => {rhs_expr}, // U+{cp:04X} -> {rhs_comment}")
+        else:
+            for idx, cp in enumerate(cps):
+                prefix = "        " if idx == 0 else "        | "
+                if idx + 1 < len(cps):
+                    lines.append(f"{prefix}'{chr(cp)}' // U+{cp:04X}")
+                else:
+                    lines.append(f"{prefix}'{chr(cp)}' => {rhs_expr}, // U+{cp:04X} -> {rhs_comment}")
+    lines.append("        _ => None,")
+    lines.append("    }")
+    lines.append("}")
+    lines.append("")
+
     lines.append("/// Return the approximate Unicode Mongolian letter (`U+1820..=U+1842`) of a Menk PUA character (`U+E264..=U+E34F`).")
     lines.append("///")
-    lines.append("/// 获取单个孟克字符（`U+E264..=U+E34F`）对应的粗略蒙古文 Unicode 基础字母（`U+1820..=U+1842`，不含 FVS / MVS）。")
+    lines.append("/// 获取单个蒙科立字符（`U+E264..=U+E34F`）对应的粗略蒙古文 Unicode 基础字母（`U+1820..=U+1842`，不含 FVS / MVS）。")
     lines.append("pub const fn menk_char_letter(ch: char, k_letter: crate::KLetter) -> Option<char> {")
     lines.append("    match ch {")
     for latin_val, cps in latin_groups.items():

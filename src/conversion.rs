@@ -3,8 +3,8 @@
 //! 孟克编码词串到 `MenkShape` 序列及 UTN #57 `PositionedWrittenUnit` 的转换逻辑。
 
 use crate::{
-    is_menk_char_only_fina, is_menk_char_only_init, menk_char_letter, menk_char_shapes, KLetter,
-    MenkShape, MenkShapeError,
+    is_menk_char_only_fina, is_menk_char_only_init, menk_char_latin, menk_char_letter,
+    menk_char_shapes, KLetter, MenkShape, MenkShapeError,
 };
 use mongol_norm::{Position, PositionedWrittenUnit};
 
@@ -27,6 +27,21 @@ fn flush_chain(chains: &mut Vec<Vec<MenkShape>>, current: &mut Vec<MenkShape>) {
     if !current.is_empty() {
         chains.push(std::mem::take(current));
     }
+}
+
+/// Transcribe a Menk PUA word (`U+E264..=U+E34F`) into its single-character Mongolian Latin
+/// spelling (Rust port of PHP `MenkCode::getStandardLatin`, using unambiguous single-character
+/// notation `ë`, `ŋ`, `ħ`, `ř`, `ł`, `ẑ`, `ĉ`).
+///
+/// 将蒙科立词串（`U+E264..=U+E34F`）转写为单字符蒙古文拉丁拼写（移植自 PHP `MenkCode::getStandardLatin`，
+/// 采用无歧义单字符记法 `ë`、`ŋ`、`ħ`、`ř`、`ł`、`ẑ`、`ĉ`）。
+pub fn get_standard_latin(word: &str) -> Result<String, MenkShapeError> {
+    let mut out = String::with_capacity(word.len());
+    for (index, character) in word.chars().enumerate() {
+        let ch = menk_char_latin(character).ok_or(MenkShapeError { index, character })?;
+        out.push(ch);
+    }
+    Ok(out)
 }
 
 /// Approximate the pure Unicode Mongolian letter sequence (`U+1820..=U+1842`, without `MVS` or `FVS`)

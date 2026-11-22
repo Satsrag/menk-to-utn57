@@ -1,8 +1,8 @@
 //! Menk PUA (`U+E264..=U+E34F`) shape extraction, UTN #57 positioned written-unit conversion,
-//! and pure-letter Unicode Mongolian (`U+1820..=U+1842`) + minimal-FVS resolution.
+//! and pure-letter / Latin minimal-FVS Unicode Mongolian resolution.
 //!
-//! 孟克私有区编码（`U+E264..=U+E34F`）基础字形提取、UTN #57 位置书写单元（`PositionedWrittenUnit`）转换，
-//! 以及结合纯蒙古文基础字母串（`U+1820..=U+1842`）求解标准 UTN #57 Unicode 与最小 FVS 序列。
+//! 蒙科立（Menk PUA，`U+E264..=U+E34F`）字形提取、UTN #57 位置书写单元（`PositionedWrittenUnit`）转换，
+//! 以及结合单字符拉丁或纯蒙古文基础字母串（`U+1820..=U+1842`）求解标准 UTN #57 Unicode 与最小 FVS 序列。
 //!
 //! All UTN #57 types ([`WrittenUnit`], [`UnitPosition`], [`PositionedWrittenUnit`], [`Fvs`]) come
 //! directly from [`mongol_norm`], which is re-exported so callers can shape or normalize results
@@ -20,19 +20,23 @@ pub mod conversion;
 pub mod resolve;
 
 pub use conversion::{
-    get_standard_letters, get_standard_letters_with_k, menk_shapes, menk_word_to_utn57,
-    parse_menk_shapes,
+    get_standard_latin, get_standard_letters, get_standard_letters_with_k, menk_shapes,
+    menk_word_to_utn57, parse_menk_shapes,
 };
 pub use generated::menk_shapes::{
-    get_char_shape, get_shape, is_menk_char_only_fina, is_menk_char_only_init, menk_char_letter,
-    menk_char_shapes, MenkShape,
+    get_char_shape, get_shape, is_menk_char_only_fina, is_menk_char_only_init, menk_char_latin,
+    menk_char_letter, menk_char_shapes, MenkShape,
 };
 pub use generated::utn57_variants::{utn57_letter_variants, LetterVariant};
 pub use mongol_norm;
 pub use mongol_norm::{
     is_mongolian_letter, Fvs, Position, PositionedWrittenUnit, UnitPosition, WrittenUnit,
 };
-pub use resolve::{utn57_and_letters_to_unicode, ResolveError, ResolvedLetter, Solution};
+pub use resolve::{
+    latin_to_mongolian_letter, menk_word_and_latin_to_unicode,
+    menk_word_and_latin_to_unicode_with_k, written_units_and_letters_to_unicode, ResolveError,
+    ResolvedLetter, Solution,
+};
 
 use std::error::Error;
 use std::fmt;

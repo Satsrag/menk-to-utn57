@@ -4,6 +4,7 @@
 //! 从目标字形自动推导词尾分写 `Chachlag` 的 `MVS`（`U+180E` + `ᠠ`/`ᠡ`），枚举全部合法的逐字母子字形切分路径，并为每条路径计算出严格最少 `FVS` 的标准 Unicode 解法。
 
 use crate::generated::utn57_variants::utn57_pinning_variants;
+use crate::{get_standard_latin, menk_word_to_utn57, KLetter, MenkShapeError};
 use mongol_norm::{Fvs, Locale, Position, PositionedWrittenUnit, Shaper, WrittenUnit};
 use std::error::Error;
 use std::fmt::{self, Display};
@@ -49,16 +50,30 @@ pub struct Solution {
     pub used_greedy_fallback: bool,
 }
 
-/// Error returned when resolving UTN #57 [`PositionedWrittenUnit`]s + pure Mongolian letters into Unicode Mongolian.
+/// Error returned when resolving UTN #57 [`PositionedWrittenUnit`]s or a Menk PUA word with
+/// Mongolian letters / single-character Latin into Unicode Mongolian.
 ///
-/// 将 UTN #57 [`PositionedWrittenUnit`] 序列与纯蒙古文字母串求解为标准蒙古文 Unicode 序列时返回的错误。
+/// 将 UTN #57 [`PositionedWrittenUnit`] 或蒙科立词串结合蒙古文字母 / 单字符拉丁转写求解为标准蒙古文 Unicode 时返回的错误。
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ResolveError {
+    /// Input Menk PUA word contains a character outside `U+E264..=U+E34F`.
+    /// 输入的蒙科立词串包含不在范围 `U+E264..=U+E34F` 内的字符。
+    InvalidMenkChar(MenkShapeError),
     /// Input `letters` string contains a character outside `U+1820..=U+1842` at 0-based char `index`.
     /// 输入的 `letters` 在第 `index` 个字符（从 0 计数）处包含不在基础字母范围 `U+1820..=U+1842` 内的字符。
     InvalidLetter {
         /// 0-based character index in `letters.chars()`.
         /// `letters.chars()` 中的字符下标（从 0 开始）。
+        index: usize,
+        /// Offending character.
+        /// 触发错误的字符。
+        character: char,
+    },
+    /// Input `latin` string contains a character not in the 34-letter single-character Mongolian Latin inventory at 0-based char `index`.
+    /// 输入的 `latin` 在第 `index` 个字符（从 0 计数）处包含不在单字符蒙古文拉丁字母表内的字符。
+    InvalidLatin {
+        /// 0-based character index in `latin.chars()`.
+        /// `latin.chars()` 中的字符下标（从 0 开始）。
         index: usize,
         /// Offending character.
         /// 触发错误的字符。
@@ -75,9 +90,15 @@ pub enum ResolveError {
 impl Display for ResolveError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::InvalidMenkChar(err) => write!(f, "{err}"),
             Self::InvalidLetter { index, character } => write!(
                 f,
                 "invalid Mongolian letter {:?} (U+{:04X}) at char index {} (expected U+1820..=U+1842)",
+                character, *character as u32, index
+            ),
+            Self::InvalidLatin { index, character } => write!(
+                f,
+                "invalid Mongolian Latin character {:?} (U+{:04X}) at char index {}",
                 character, *character as u32, index
             ),
             Self::TargetNormalization(err) => {
@@ -96,9 +117,16 @@ impl Display for ResolveError {
 impl Error for ResolveError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
+            Self::InvalidMenkChar(err) => Some(err),
             Self::TargetNormalization(err) => Some(err),
-            Self::InvalidLetter { .. } | Self::ShapeMismatch => None,
+            Self::InvalidLetter { .. } | Self::InvalidLatin { .. } | Self::ShapeMismatch => None,
         }
+    }
+}
+
+impl From<MenkShapeError> for ResolveError {
+    fn from(err: MenkShapeError) -> Self {
+        Self::InvalidMenkChar(err)
     }
 }
 
@@ -110,12 +138,116 @@ impl From<mongol_norm::Error> for ResolveError {
 
 pub use mongol_norm::is_mongolian_letter;
 
+/// Map one single-character Mongolian Latin letter (case-insensitive, plus `ö`/`ü` aliases)
+/// 1-to-1 onto its Unicode Mongolian base letter (`U+1820..=U+1842`), using `k_letter` for `'k'`/`'K'`.
+///
+/// 将单个蒙古文单字符拉丁字母（兼容大小写及 `ö`/`ü` 别名）一对一映射为标准蒙古文 Unicode 基础字母（`U+1820..=U+1842`），
+/// 其中 `'k'` / `'K'` 按 `k_letter` 映射为 `'ᠺ'`（内蒙古）或 `'ᠻ'`（蒙古国）。
+pub const fn latin_to_mongolian_letter(ch: char, k_letter: KLetter) -> Option<char> {
+    match ch {
+        'a' | 'A' => Some('ᠠ'),             // U+1820
+        'e' | 'E' => Some('ᠡ'),             // U+1821
+        'i' | 'I' => Some('ᠢ'),             // U+1822
+        'o' | 'O' => Some('ᠣ'),             // U+1823
+        'u' | 'U' => Some('ᠤ'),             // U+1824
+        'ɵ' | 'Ɵ' | 'ö' | 'Ö' => Some('ᠥ'), // U+1825
+        'ʉ' | 'Ʉ' | 'ü' | 'Ü' => Some('ᠦ'), // U+1826
+        'ë' | 'Ë' => Some('ᠧ'),             // U+1827
+        'n' | 'N' => Some('ᠨ'),             // U+1828
+        'ŋ' | 'Ŋ' => Some('ᠩ'),             // U+1829
+        'b' | 'B' => Some('ᠪ'),             // U+182A
+        'p' | 'P' => Some('ᠫ'),             // U+182B
+        'h' | 'H' => Some('ᠬ'),             // U+182C
+        'g' | 'G' => Some('ᠭ'),             // U+182D
+        'm' | 'M' => Some('ᠮ'),             // U+182E
+        'l' | 'L' => Some('ᠯ'),             // U+182F
+        's' | 'S' => Some('ᠰ'),             // U+1830
+        'š' | 'Š' => Some('ᠱ'),             // U+1831
+        't' | 'T' => Some('ᠲ'),             // U+1832
+        'd' | 'D' => Some('ᠳ'),             // U+1833
+        'c' | 'C' => Some('ᠴ'),             // U+1834
+        'z' | 'Z' => Some('ᠵ'),             // U+1835
+        'y' | 'Y' => Some('ᠶ'),             // U+1836
+        'r' | 'R' => Some('ᠷ'),             // U+1837
+        'w' | 'W' => Some('ᠸ'),             // U+1838
+        'f' | 'F' => Some('ᠹ'),             // U+1839
+        'k' | 'K' => Some(k_letter.as_char()),
+        'č' | 'Č' => Some('ᠼ'), // U+183C
+        'ž' | 'Ž' => Some('ᠽ'), // U+183D
+        'ħ' | 'Ħ' => Some('ᠾ'), // U+183E
+        'ř' | 'Ř' => Some('ᠿ'), // U+183F
+        'ł' | 'Ł' => Some('ᡀ'), // U+1840
+        'ẑ' | 'Ẑ' => Some('ᡁ'), // U+1841
+        'ĉ' | 'Ĉ' => Some('ᡂ'), // U+1842
+        _ => None,
+    }
+}
+
+/// Convert a single-character Mongolian Latin string into pure Unicode Mongolian letters (`U+1820..=U+1842`).
+///
+/// 将单字符蒙古文拉丁字符串一对一转换为纯蒙古文 Unicode 基础字母串（`U+1820..=U+1842`）。
+fn parse_latin_to_letters(latin: &str, k_letter: KLetter) -> Result<String, ResolveError> {
+    let mut out = String::with_capacity(latin.len() * 3);
+    for (index, character) in latin.chars().enumerate() {
+        let letter = latin_to_mongolian_letter(character, k_letter)
+            .ok_or(ResolveError::InvalidLatin { index, character })?;
+        out.push(letter);
+    }
+    Ok(out)
+}
+
 /// Shared process-wide [`Shaper`] instance (`Shaper` is `Send + Sync`).
 ///
 /// 进程级共享的 [`Shaper`] 实例（`Shaper` 实现了 `Send + Sync`，只需初始化一次）。
 fn default_shaper() -> &'static Shaper {
     static SHAPER: OnceLock<Shaper> = OnceLock::new();
     SHAPER.get_or_init(|| Shaper::new(Locale::Mng))
+}
+
+/// Resolve a Menk PUA word (`U+E264..=U+E34F`) together with an optional single-character
+/// Mongolian Latin spelling into all matching minimal-FVS UTN #57 Unicode [`Solution`]s, using
+/// [`KLetter::Ka`] (`'ᠺ'` `U+183A`) for `'k'`.
+///
+/// - When `latin` is `Some(text)`, uses the caller-provided Latin spelling directly.
+/// - When `latin` is `None`, automatically transcribes `menk_word` via [`get_standard_latin`] first.
+///
+/// Internally converts `menk_word` to UTN #57 [`PositionedWrittenUnit`]s via [`menk_word_to_utn57`],
+/// maps each Latin letter 1-to-1 via [`latin_to_mongolian_letter`], and delegates to
+/// [`written_units_and_letters_to_unicode`].
+///
+/// 将蒙科立（Menk PUA，`U+E264..=U+E34F`）词串与可选的单字符蒙古文拉丁转写结合，求解全部匹配的标准 UTN #57 Unicode
+/// 最小 FVS 解法（`'k'` 默认映射为内蒙古标准 [`KLetter::Ka`] `'ᠺ'` `U+183A`）：
+/// - 传入 `Some(latin)` 时直接使用指定的拉丁转写；
+/// - 传入 `None` 时默认自动调用 [`get_standard_latin`] 从 `menk_word` 转写拉丁后再进行转换。
+pub fn menk_word_and_latin_to_unicode(
+    menk_word: &str,
+    latin: Option<&str>,
+) -> Result<Vec<Solution>, ResolveError> {
+    menk_word_and_latin_to_unicode_with_k(menk_word, latin, KLetter::default())
+}
+
+/// Resolve a Menk PUA word (`U+E264..=U+E34F`) together with an optional single-character
+/// Mongolian Latin spelling into all matching minimal-FVS UTN #57 Unicode [`Solution`]s with an
+/// explicit [`KLetter`] choice (`'ᠺ'` vs `'ᠻ'`).
+///
+/// When `latin` is `None`, automatically transcribes `menk_word` via [`get_standard_latin`].
+///
+/// 按指定的 [`KLetter`]（`'ᠺ'` `U+183A` 或 `'ᠻ'` `U+183B`）将蒙科立词串与可选的单字符蒙古文拉丁转写求解为全部匹配的标准
+/// UTN #57 Unicode 最小 FVS 解法；当 `latin` 为 `None` 时自动调用 [`get_standard_latin`] 转写拉丁。
+pub fn menk_word_and_latin_to_unicode_with_k(
+    menk_word: &str,
+    latin: Option<&str>,
+    k_letter: KLetter,
+) -> Result<Vec<Solution>, ResolveError> {
+    let units = menk_word_to_utn57(menk_word)?;
+    let letters = match latin {
+        Some(latin) => parse_latin_to_letters(latin, k_letter)?,
+        None => {
+            let inferred_latin = get_standard_latin(menk_word)?;
+            parse_latin_to_letters(&inferred_latin, k_letter)?
+        }
+    };
+    written_units_and_letters_to_unicode(&units, &letters)
 }
 
 /// Compute all valid minimal-FVS [`Solution`]s for a word from its UTN #57 [`PositionedWrittenUnit`]s
@@ -136,7 +268,7 @@ fn default_shaper() -> &'static Shaper {
 /// - 对每条切分路径求解保持逐字母子字形不变的严格最少 `FVS` 组合；
 /// - 返回按 `fvs_count` 升序排列（最少 `FVS` 在前）的非空 `Vec<Solution>`；若无任何合法解法则返回 [`ResolveError::ShapeMismatch`]；
 /// - `letters` 中可直接使用内蒙古标准 `'ᠺ'`（`U+183A`）或蒙古国标准 `'ᠻ'`（`U+183B`），自动与字形中的 `K` / `K2` 对齐。
-pub fn utn57_and_letters_to_unicode(
+pub fn written_units_and_letters_to_unicode(
     units: &[PositionedWrittenUnit],
     letters: &str,
 ) -> Result<Vec<Solution>, ResolveError> {
@@ -300,12 +432,10 @@ const fn letter_position(index: usize, count: usize) -> Position {
     }
 }
 
-/// Expand single-unit UTN #57 duplicates (`Dd`, `Cr`, medial `H`/`Hx`) on `Shaper::shape_detailed`
-/// token output so each letter's shaped units can be compared 1-to-1 against `expanded_written`.
-/// (See [`matches_chain_prefix`] for coupling notes to upstream `mongol-norm` rules & decoupling plans.)
+/// Expand single-unit duplicates (`Dd`, `Cr`, medial `H`/`Hx`) on `shape_detailed` output
+/// (mirrors `mongol-norm` expansion rules; see [`matches_chain_prefix`]).
 ///
-/// 将 `Shaper::shape_detailed` 中单个字母产出的同形异码单元（`Dd`、`Cr`、词中 `H`/`Hx`）展开，以便与 `expanded_written` 精确比对。
-/// （与上游 `mongol-norm` 拆解/合并规则的耦合说明及后续解耦方案见 [`matches_chain_prefix`] 注释。）
+/// 展开 `shape_detailed` 单个 token 的同形单元（`Dd`/`Cr`/词中 `H`/`Hx`），与 `mongol-norm` 保持一致。
 fn expand_token_written(raw: &[WrittenUnit], pos: Position) -> Vec<WrittenUnit> {
     let mut out = Vec::with_capacity(raw.len() + 1);
     for &u in raw {
@@ -336,40 +466,17 @@ fn matches_chain_units(
     raw_units == target_units || shaper.canonical_units(raw_units) == target_units
 }
 
-/// Check whether `cur_units` can still be extended to match `target_units` (leaving the final target
-/// unit unconstrained so chain-ending contractions like `O + Aa -> B2:fina` are not pruned early).
+/// Check whether `cur_units` can still extend to `target_units` (leaving the last unit unconstrained
+/// for tail contractions like `O + Aa -> B2:fina`).
 ///
-/// 校验 `cur_units` 是否仍可能扩展为 `target_units`（保留末尾 1 个单元不做硬比较，避免提前剪掉 `O + Aa -> B2:fina` 等链尾合并）。
+/// 校验 `cur_units` 是否可能继续拼出 `target_units`（末尾留 1 位给 `O + Aa -> B2:fina` 等链尾合并）。
 ///
-/// # Known Limitation / 当前存在的问题
+/// Note: Assumes `mongol-norm` only does 2-to-1 tail contractions (same coupling as
+/// [`expand_token_written`]); revisit once upstream settles its split/merge API
+/// (`orca_session_id:antigravity_91a3c774_964c_4042_9243_63750066dd96`).
 ///
-/// - `target_len.saturating_sub(1)` and `cur_units.len() <= target_len` implicitly assume `mongol-norm`
-///   only contracts a 2-unit pair at the chain tail (at most rewriting the last 1 unit, never mid-chain
-///   and never >=3-to-1); [`expand_token_written`] (and `expand_written_units` in `scripts/generate.py`)
-///   likewise mirrors `mongol-norm`'s current single-unit expansions.
-///   此处的 `target_len.saturating_sub(1)` 与 `cur_units.len() <= target_len` 隐式假设了 `mongol-norm`
-///   只做链尾二合一合并（最多改写末尾 1 个单元，不做词中合并或三合一）；[`expand_token_written`]
-///   （及 `scripts/generate.py` 的 `expand_written_units`）也同样镜像了当前单单元展开规则。
-/// - Prefix pruning cannot simply be removed (~1.006e8 combinations across `word.txt`), so if upstream
-///   `mongol-norm` changes contraction arity or adds mid-chain merges, this check would prune valid paths.
-///   因不能去掉前缀剪枝（`word.txt` 无剪枝会膨胀至 1 亿+ 组合），一旦上游 `mongol-norm` 修改合并规则或新增词中合并，
-///   此处会漏解。
-///
-/// # When & How to Resolve / 什么时候解决
-///
-/// - **When / 时机**：Resolve after upstream `mongol-norm` settles its split/merge design
-///   (`orca_session_id:antigravity_91a3c774_964c_4042_9243_63750066dd96`), or immediately if `mongol-norm`
-///   introduces mid-chain or >=3-unit contractions.
-///   待上游 `mongol-norm` 确定最终拆解/合并机制后统一改造（讨论见
-///   `orca_session_id:antigravity_91a3c774_964c_4042_9243_63750066dd96`），或上游新增词中/多元合并时立即调整。
-/// - **How / 方案**：
-///   1. *Preferred / 首选*：Use upstream `mongol-norm` prefix-check & per-token canonical expansion APIs,
-///      deleting `saturating_sub(1)` and [`expand_token_written`].
-///      改调上游 `mongol-norm` 提供的子链前缀兼容判断与单字母规范展开接口，彻底删掉 `saturating_sub(1)` 与
-///      [`expand_token_written`]。
-///   2. *Fallback / 备选*：Pad non-final prefixes with `WrittenUnit::Nirugu` for [`Shaper::canonical_units`]
-///      and dynamically probe the lookback window once in `OnceLock` at startup.
-///      若上游不暴露该接口，则在本地给前缀垫 `Nirugu` 调 [`Shaper::canonical_units`]，并在 `OnceLock` 启动时自动探测回看窗口。
+/// 注：当前假设 `mongol-norm` 仅做链尾二合一合并（与 [`expand_token_written`] 同源耦合）；
+/// 待上游定稿拆解/合并接口或新增词中/多元合并时替换。
 fn matches_chain_prefix(cur_units: &[WrittenUnit], target_units: &[WrittenUnit]) -> bool {
     let target_len = target_units.len();
     let check_len = cur_units.len().min(target_len.saturating_sub(1));

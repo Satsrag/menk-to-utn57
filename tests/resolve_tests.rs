@@ -4,10 +4,11 @@
 
 use menk_to_utn57::mongol_norm::{Locale, Shaper};
 use menk_to_utn57::{
-    get_standard_letters, get_standard_letters_with_k, is_mongolian_letter, menk_char_letter,
-    menk_word_to_utn57, utn57_and_letters_to_unicode, utn57_letter_variants, Fvs, KLetter,
-    Position, PositionedWrittenUnit, ResolveError, ResolvedLetter, Solution, UnitPosition,
-    WrittenUnit,
+    get_standard_latin, get_standard_letters, get_standard_letters_with_k, is_mongolian_letter,
+    latin_to_mongolian_letter, menk_char_latin, menk_char_letter, menk_word_and_latin_to_unicode,
+    menk_word_and_latin_to_unicode_with_k, menk_word_to_utn57, utn57_letter_variants,
+    written_units_and_letters_to_unicode, Fvs, KLetter, MenkShapeError, Position,
+    PositionedWrittenUnit, ResolveError, ResolvedLetter, Solution, UnitPosition, WrittenUnit,
 };
 use std::collections::BTreeSet;
 use std::fs;
@@ -129,7 +130,7 @@ fn resolves_unique_zero_fvs_and_fvs_words() {
     // 1. Chachlag words `ᠪᠠᠢᠨᠠ` (`ᠪᠠᠢᠨ᠎ᠠ`), `ᠰᠠᠷᠠ` (`ᠰᠠᠷ᠎ᠠ`), and standalone `[Aa:isol]` (`᠎ᠠ`).
     // 1. 分写字尾词 `ᠪᠠᠢᠨᠠ`、`ᠰᠠᠷᠠ` 与独立字尾 `[Aa:isol]`。
     let baina_units = menk_word_to_utn57("\u{E2C1}\u{E26C}\u{E281}\u{E2B6}\u{E26A}").unwrap();
-    let baina_sols = utn57_and_letters_to_unicode(&baina_units, "ᠪᠠᠢᠨᠠ").unwrap();
+    let baina_sols = written_units_and_letters_to_unicode(&baina_units, "ᠪᠠᠢᠨᠠ").unwrap();
     assert_eq!(
         baina_sols,
         vec![Solution {
@@ -173,7 +174,7 @@ fn resolves_unique_zero_fvs_and_fvs_words() {
 
     let sara_units = menk_word_to_utn57("\u{E2FD}\u{E26C}\u{E325}\u{E26A}").unwrap();
     assert_eq!(
-        unicodes(&utn57_and_letters_to_unicode(&sara_units, "ᠰᠠᠷᠠ").unwrap()),
+        unicodes(&written_units_and_letters_to_unicode(&sara_units, "ᠰᠠᠷᠠ").unwrap()),
         vec!["ᠰᠠᠷ᠎ᠠ"]
     );
 
@@ -182,7 +183,7 @@ fn resolves_unique_zero_fvs_and_fvs_words() {
         UnitPosition::Isol,
     )];
     assert_eq!(
-        unicodes(&utn57_and_letters_to_unicode(&standalone_aa, "ᠠ").unwrap()),
+        unicodes(&written_units_and_letters_to_unicode(&standalone_aa, "ᠠ").unwrap()),
         vec!["᠎ᠠ"]
     );
 
@@ -190,45 +191,57 @@ fn resolves_unique_zero_fvs_and_fvs_words() {
     // 2. 需加 FVS 且字形切分唯一的词（`ᠶᠢᠨ`、`ᠢᠶᠡᠨ`、`ᠢᠶᠡᠷ`、`ᠳᠦ`）。
     let yin_units = menk_word_to_utn57("\u{E281}\u{E2B5}").unwrap();
     assert_eq!(
-        unicodes(&utn57_and_letters_to_unicode(&yin_units, "ᠶᠢᠨ").unwrap()),
+        unicodes(&written_units_and_letters_to_unicode(&yin_units, "ᠶᠢᠨ").unwrap()),
         vec!["ᠶ᠋ᠢᠨ"]
     );
     let iyen_units = menk_word_to_utn57("\u{E281}\u{E276}\u{E2B5}").unwrap();
     assert_eq!(
-        unicodes(&utn57_and_letters_to_unicode(&iyen_units, "ᠢᠶᠡᠨ").unwrap()),
+        unicodes(&written_units_and_letters_to_unicode(&iyen_units, "ᠢᠶᠡᠨ").unwrap()),
         vec!["ᠢ᠋ᠶ᠋ᠡᠨ"]
     );
     let iyer_units = menk_word_to_utn57("\u{E281}\u{E276}\u{E325}").unwrap();
     assert_eq!(
-        unicodes(&utn57_and_letters_to_unicode(&iyer_units, "ᠢᠶᠡᠷ").unwrap()),
+        unicodes(&written_units_and_letters_to_unicode(&iyer_units, "ᠢᠶᠡᠷ").unwrap()),
         vec!["ᠢ᠋ᠶ᠋ᠡᠷ"]
     );
 
     assert_eq!(
         unicodes(
-            &utn57_and_letters_to_unicode(&menk_word_to_utn57("\u{E310}\u{E268}").unwrap(), "ᠳᠠ")
-                .unwrap()
+            &written_units_and_letters_to_unicode(
+                &menk_word_to_utn57("\u{E310}\u{E268}").unwrap(),
+                "ᠳᠠ"
+            )
+            .unwrap()
         ),
         vec!["ᠳᠠ"]
     );
     assert_eq!(
         unicodes(
-            &utn57_and_letters_to_unicode(&menk_word_to_utn57("\u{E310}\u{E2A5}").unwrap(), "ᠳᠦ")
-                .unwrap()
+            &written_units_and_letters_to_unicode(
+                &menk_word_to_utn57("\u{E310}\u{E2A5}").unwrap(),
+                "ᠳᠦ"
+            )
+            .unwrap()
         ),
         vec!["ᠳᠦ"]
     );
     assert_eq!(
         unicodes(
-            &utn57_and_letters_to_unicode(&menk_word_to_utn57("\u{E310}\u{E2A3}").unwrap(), "ᠳᠦ")
-                .unwrap()
+            &written_units_and_letters_to_unicode(
+                &menk_word_to_utn57("\u{E310}\u{E2A3}").unwrap(),
+                "ᠳᠦ"
+            )
+            .unwrap()
         ),
         vec!["ᠳ᠋ᠦ"]
     );
     assert_eq!(
         unicodes(
-            &utn57_and_letters_to_unicode(&menk_word_to_utn57("\u{E310}\u{E2A7}").unwrap(), "ᠳᠦ")
-                .unwrap()
+            &written_units_and_letters_to_unicode(
+                &menk_word_to_utn57("\u{E310}\u{E2A7}").unwrap(),
+                "ᠳᠦ"
+            )
+            .unwrap()
         ),
         vec!["ᠳ᠋ᠦ᠌"]
     );
@@ -246,7 +259,7 @@ fn enumerates_all_matching_solutions_without_zero_fvs_pruning() {
         PositionedWrittenUnit::new(WrittenUnit::L, UnitPosition::Fina),
     ];
 
-    let naal_solutions = utn57_and_letters_to_unicode(&naal_units, "ᠨᠠᠠᠯ").unwrap();
+    let naal_solutions = written_units_and_letters_to_unicode(&naal_units, "ᠨᠠᠠᠯ").unwrap();
     assert_eq!(
         naal_solutions,
         vec![
@@ -329,7 +342,7 @@ fn enumerates_all_matching_solutions_without_zero_fvs_pruning() {
         PositionedWrittenUnit::new(WrittenUnit::A, UnitPosition::Medi),
         PositionedWrittenUnit::new(WrittenUnit::L, UnitPosition::Fina),
     ];
-    let double_sols = utn57_and_letters_to_unicode(&double_units, "ᠨᠠᠠᠯᠨᠠᠠᠯ").unwrap();
+    let double_sols = written_units_and_letters_to_unicode(&double_units, "ᠨᠠᠠᠯᠨᠠᠠᠯ").unwrap();
     assert_eq!(
         unicodes(&double_sols),
         vec![
@@ -351,7 +364,7 @@ fn enumerates_all_matching_solutions_without_zero_fvs_pruning() {
         PositionedWrittenUnit::new(WrittenUnit::I, UnitPosition::Medi),
         PositionedWrittenUnit::new(WrittenUnit::L, UnitPosition::Fina),
     ];
-    let fruil_sols = utn57_and_letters_to_unicode(&fruil_units, "ᠹᠷᠦᠢᠯ").unwrap();
+    let fruil_sols = written_units_and_letters_to_unicode(&fruil_units, "ᠹᠷᠦᠢᠯ").unwrap();
     assert_eq!(fruil_sols.len(), 2);
     assert_eq!(fruil_sols[0].unicode, "ᠹᠷᠦᠢᠯ");
     assert_eq!(fruil_sols[0].fvs_count, 0);
@@ -371,7 +384,7 @@ fn enumerates_all_matching_solutions_without_zero_fvs_pruning() {
     assert_eq!(fruil_sols[1].letters[3].fvs, None);
 
     let fruid_units = menk_word_to_utn57("\u{E330}\u{E326}\u{E2AA}\u{E27E}\u{E312}").unwrap();
-    let fruid_sols = utn57_and_letters_to_unicode(&fruid_units, "ᠹᠷᠦᠢᠳ").unwrap();
+    let fruid_sols = written_units_and_letters_to_unicode(&fruid_units, "ᠹᠷᠦᠢᠳ").unwrap();
     assert_eq!(
         unicodes(&fruid_sols),
         vec!["ᠹᠷᠦᠢᠳ\u{180B}", "ᠹᠷᠦ\u{180D}ᠢᠳ\u{180B}"]
@@ -386,7 +399,7 @@ fn enumerates_all_matching_solutions_without_zero_fvs_pruning() {
         PositionedWrittenUnit::new(WrittenUnit::I, UnitPosition::Medi),
         PositionedWrittenUnit::new(WrittenUnit::A, UnitPosition::Fina),
     ];
-    let sain_sols = utn57_and_letters_to_unicode(&sain_odd_units, "ᠰᠠᠢᠨ").unwrap();
+    let sain_sols = written_units_and_letters_to_unicode(&sain_odd_units, "ᠰᠠᠢᠨ").unwrap();
     assert_eq!(
         unicodes(&sain_sols),
         vec!["ᠰᠠᠢ\u{180B}ᠨ", "ᠰᠠ\u{180B}ᠢ\u{180D}ᠨ"]
@@ -410,11 +423,11 @@ fn ka_and_kha_letters_both_align_directly_with_k_glyphs() {
     );
 
     assert_eq!(
-        unicodes(&utn57_and_letters_to_unicode(&kino_units, "ᠺᠢᠨᠣ").unwrap()),
+        unicodes(&written_units_and_letters_to_unicode(&kino_units, "ᠺᠢᠨᠣ").unwrap()),
         vec!["ᠺᠢᠨᠣ\u{180B}"]
     );
     assert_eq!(
-        unicodes(&utn57_and_letters_to_unicode(&kino_units, "ᠻᠢᠨᠣ").unwrap()),
+        unicodes(&written_units_and_letters_to_unicode(&kino_units, "ᠻᠢᠨᠣ").unwrap()),
         vec!["ᠻᠢᠨᠣ\u{180B}"]
     );
 }
@@ -428,7 +441,7 @@ fn distinct_unicode_letters_and_chachlag_mvs_rules_work() {
     let monggol_units =
         menk_word_to_utn57("\u{E2F2}\u{E289}\u{E2BC}\u{E2EA}\u{E289}\u{E2F9}").unwrap();
     assert_eq!(
-        unicodes(&utn57_and_letters_to_unicode(&monggol_units, "ᠮᠣᠩᠭᠣᠯ").unwrap()),
+        unicodes(&written_units_and_letters_to_unicode(&monggol_units, "ᠮᠣᠩᠭᠣᠯ").unwrap()),
         vec!["ᠮᠣᠩᠭᠣᠯ"]
     );
 
@@ -436,7 +449,7 @@ fn distinct_unicode_letters_and_chachlag_mvs_rules_work() {
         menk_word_to_utn57("\u{E319}\u{E276}\u{E2ED}\u{E2AC}\u{E2B8}\u{E2EA}\u{E26C}\u{E325}")
             .unwrap();
     assert_eq!(
-        unicodes(&utn57_and_letters_to_unicode(&zegungar_units, "ᠵᠡᠭᠦᠨᠭᠠᠷ").unwrap()),
+        unicodes(&written_units_and_letters_to_unicode(&zegungar_units, "ᠵᠡᠭᠦᠨᠭᠠᠷ").unwrap()),
         vec!["ᠵᠡᠭᠦᠨᠭᠠᠷ"]
     );
 
@@ -446,8 +459,10 @@ fn distinct_unicode_letters_and_chachlag_mvs_rules_work() {
         PositionedWrittenUnit::new(WrittenUnit::G, UnitPosition::Medi),
         PositionedWrittenUnit::new(WrittenUnit::A, UnitPosition::Fina),
     ];
-    let enge_ang = &utn57_and_letters_to_unicode(&fem_fina_units, "ᠡᠩᠡ").unwrap()[0].unicode;
-    let enge_ng = &utn57_and_letters_to_unicode(&fem_fina_units, "ᠡᠨᠭᠡ").unwrap()[0].unicode;
+    let enge_ang =
+        &written_units_and_letters_to_unicode(&fem_fina_units, "ᠡᠩᠡ").unwrap()[0].unicode;
+    let enge_ng =
+        &written_units_and_letters_to_unicode(&fem_fina_units, "ᠡᠨᠭᠡ").unwrap()[0].unicode;
     assert_eq!(enge_ang, "ᠡᠩᠡ");
     assert_eq!(enge_ng, "ᠡᠨᠭᠡ᠌");
     assert!(shaper.same_shape(enge_ang, enge_ng).unwrap());
@@ -466,7 +481,7 @@ fn distinct_unicode_letters_and_chachlag_mvs_rules_work() {
         assert_eq!(get_standard_letters(menk_word).unwrap(), expected_letters);
         let units = menk_word_to_utn57(menk_word).unwrap();
         assert_eq!(
-            unicodes(&utn57_and_letters_to_unicode(&units, expected_letters).unwrap()),
+            unicodes(&written_units_and_letters_to_unicode(&units, expected_letters).unwrap()),
             vec![expected_letters]
         );
     }
@@ -484,7 +499,7 @@ fn distinct_unicode_letters_and_chachlag_mvs_rules_work() {
         PositionedWrittenUnit::new(WrittenUnit::U, UnitPosition::Isol),
     ];
     assert_eq!(
-        utn57_and_letters_to_unicode(&eguden_mvs_units, "ᠡᠭᠦᠳᠡᠨᠦ"),
+        written_units_and_letters_to_unicode(&eguden_mvs_units, "ᠡᠭᠦᠳᠡᠨᠦ"),
         Err(ResolveError::ShapeMismatch)
     );
 }
@@ -493,7 +508,7 @@ fn distinct_unicode_letters_and_chachlag_mvs_rules_work() {
 fn error_variants_report_invalid_inputs_cleanly() {
     let sa_units = menk_word_to_utn57("\u{E2FD}\u{E268}").unwrap();
     assert_eq!(
-        utn57_and_letters_to_unicode(&[], "").unwrap(),
+        written_units_and_letters_to_unicode(&[], "").unwrap(),
         vec![Solution {
             unicode: String::new(),
             fvs_count: 0,
@@ -504,28 +519,28 @@ fn error_variants_report_invalid_inputs_cleanly() {
     // Latin, punctuation, MVS (`U+180E`), and FVS (`U+180B`) are rejected in `letters` (`U+1820..=U+1842` only).
     // 拉丁字符、标点、MVS（`U+180E`）与 FVS（`U+180B`）在纯字母输入中均返回 `InvalidLetter`。
     assert_eq!(
-        utn57_and_letters_to_unicode(&sa_units, "sa"),
+        written_units_and_letters_to_unicode(&sa_units, "sa"),
         Err(ResolveError::InvalidLetter {
             index: 0,
             character: 's'
         })
     );
     assert_eq!(
-        utn57_and_letters_to_unicode(&sa_units, "ᠰ\u{180E}ᠠ"),
+        written_units_and_letters_to_unicode(&sa_units, "ᠰ\u{180E}ᠠ"),
         Err(ResolveError::InvalidLetter {
             index: 1,
             character: '\u{180E}'
         })
     );
     assert_eq!(
-        utn57_and_letters_to_unicode(&sa_units, "ᠰᠠ\u{180B}"),
+        written_units_and_letters_to_unicode(&sa_units, "ᠰᠠ\u{180B}"),
         Err(ResolveError::InvalidLetter {
             index: 2,
             character: '\u{180B}'
         })
     );
     assert_eq!(
-        utn57_and_letters_to_unicode(&sa_units, "ᠪᠠ"),
+        written_units_and_letters_to_unicode(&sa_units, "ᠪᠠ"),
         Err(ResolveError::ShapeMismatch)
     );
 
@@ -533,14 +548,14 @@ fn error_variants_report_invalid_inputs_cleanly() {
     // 词尾分写 `Chachlag`（`MVS + Aa`）仅允许 `'ᠠ'` 或 `'ᠡ'`。
     let baina_units = menk_word_to_utn57("\u{E2C1}\u{E26C}\u{E281}\u{E2B6}\u{E26A}").unwrap();
     assert_eq!(
-        utn57_and_letters_to_unicode(&baina_units, "ᠪᠠᠢᠨᠣ"),
+        written_units_and_letters_to_unicode(&baina_units, "ᠪᠠᠢᠨᠣ"),
         Err(ResolveError::ShapeMismatch)
     );
 
     // Incomplete glyph fragments requiring ZWJ or non-word breaks requiring ZWNJ are rejected.
     // 含 ZWJ 的残缺片段或含 ZWNJ 的非单词断口直接返回 `ShapeMismatch`。
     assert_eq!(
-        utn57_and_letters_to_unicode(
+        written_units_and_letters_to_unicode(
             &[PositionedWrittenUnit::new(
                 WrittenUnit::A,
                 UnitPosition::Init
@@ -550,7 +565,7 @@ fn error_variants_report_invalid_inputs_cleanly() {
         Err(ResolveError::ShapeMismatch)
     );
     assert_eq!(
-        utn57_and_letters_to_unicode(
+        written_units_and_letters_to_unicode(
             &[
                 PositionedWrittenUnit::new(WrittenUnit::A, UnitPosition::Isol),
                 PositionedWrittenUnit::new(WrittenUnit::A, UnitPosition::Isol),
@@ -560,7 +575,7 @@ fn error_variants_report_invalid_inputs_cleanly() {
         Err(ResolveError::ShapeMismatch)
     );
     assert!(matches!(
-        utn57_and_letters_to_unicode(
+        written_units_and_letters_to_unicode(
             &[PositionedWrittenUnit::new(
                 WrittenUnit::Aa,
                 UnitPosition::Init
@@ -610,7 +625,7 @@ fn optional_local_word_corpus_enumerates_and_verifies_all_solutions() {
             .normalize_positioned_written_units(&expected_units)
             .unwrap();
 
-        match utn57_and_letters_to_unicode(&units, &letters) {
+        match written_units_and_letters_to_unicode(&units, &letters) {
             Ok(solutions) => {
                 assert!(!solutions.is_empty());
                 solved_words += 1;
@@ -697,7 +712,7 @@ fn long_word_budget_exact_and_greedy_fallback_work() {
     ));
     exact_letters.push('ᠯ');
 
-    let exact_sols = utn57_and_letters_to_unicode(&exact_units, &exact_letters).unwrap();
+    let exact_sols = written_units_and_letters_to_unicode(&exact_units, &exact_letters).unwrap();
     assert_eq!(exact_sols.len(), 1);
     assert_eq!(exact_sols[0].fvs_count, 1);
     assert!(!exact_sols[0].used_greedy_fallback);
@@ -732,12 +747,192 @@ fn long_word_budget_exact_and_greedy_fallback_work() {
     ));
     greedy_letters.push('ᠯ');
 
-    let greedy_sols = utn57_and_letters_to_unicode(&greedy_units, &greedy_letters).unwrap();
+    let greedy_sols = written_units_and_letters_to_unicode(&greedy_units, &greedy_letters).unwrap();
     assert_eq!(greedy_sols.len(), 1);
     assert_eq!(greedy_sols[0].fvs_count, 17);
     assert!(greedy_sols[0].used_greedy_fallback);
     assert_eq!(
         shaper.shape(&greedy_sols[0].unicode).unwrap(),
         shaper.canonical_positioned_units(&greedy_units).unwrap()
+    );
+}
+
+#[test]
+fn menk_word_and_latin_resolution_and_errors_work() {
+    // 1. All 34 single-character Latin letters (+ uppercase & `ö`/`ü` aliases) map to all 35 Unicode Mongolian letters.
+    // 1. 全部 34 个单字符拉丁字母（含大小写及 `ö`/`ü` 别名）覆盖全部 35 个蒙古文 Unicode 基础字母。
+    let pairs = [
+        ('a', 'A', 'ᠠ'),
+        ('e', 'E', 'ᠡ'),
+        ('i', 'I', 'ᠢ'),
+        ('o', 'O', 'ᠣ'),
+        ('u', 'U', 'ᠤ'),
+        ('ɵ', 'Ɵ', 'ᠥ'),
+        ('ö', 'Ö', 'ᠥ'),
+        ('ʉ', 'Ʉ', 'ᠦ'),
+        ('ü', 'Ü', 'ᠦ'),
+        ('ë', 'Ë', 'ᠧ'),
+        ('n', 'N', 'ᠨ'),
+        ('ŋ', 'Ŋ', 'ᠩ'),
+        ('b', 'B', 'ᠪ'),
+        ('p', 'P', 'ᠫ'),
+        ('h', 'H', 'ᠬ'),
+        ('g', 'G', 'ᠭ'),
+        ('m', 'M', 'ᠮ'),
+        ('l', 'L', 'ᠯ'),
+        ('s', 'S', 'ᠰ'),
+        ('š', 'Š', 'ᠱ'),
+        ('t', 'T', 'ᠲ'),
+        ('d', 'D', 'ᠳ'),
+        ('c', 'C', 'ᠴ'),
+        ('z', 'Z', 'ᠵ'),
+        ('y', 'Y', 'ᠶ'),
+        ('r', 'R', 'ᠷ'),
+        ('w', 'W', 'ᠸ'),
+        ('f', 'F', 'ᠹ'),
+        ('č', 'Č', 'ᠼ'),
+        ('ž', 'Ž', 'ᠽ'),
+        ('ħ', 'Ħ', 'ᠾ'),
+        ('ř', 'Ř', 'ᠿ'),
+        ('ł', 'Ł', 'ᡀ'),
+        ('ẑ', 'Ẑ', 'ᡁ'),
+        ('ĉ', 'Ĉ', 'ᡂ'),
+    ];
+    let mut covered = BTreeSet::new();
+    for (lo, hi, expected) in pairs {
+        assert_eq!(latin_to_mongolian_letter(lo, KLetter::Ka), Some(expected));
+        assert_eq!(latin_to_mongolian_letter(hi, KLetter::Ka), Some(expected));
+        covered.insert(expected);
+    }
+    assert_eq!(latin_to_mongolian_letter('k', KLetter::Ka), Some('ᠺ'));
+    assert_eq!(latin_to_mongolian_letter('K', KLetter::Ka), Some('ᠺ'));
+    assert_eq!(latin_to_mongolian_letter('k', KLetter::Kha), Some('ᠻ'));
+    assert_eq!(latin_to_mongolian_letter('K', KLetter::Kha), Some('ᠻ'));
+    covered.insert('ᠺ');
+    covered.insert('ᠻ');
+    assert_eq!(covered.len(), 35);
+    assert_eq!(latin_to_mongolian_letter('-', KLetter::Ka), None);
+    assert_eq!(latin_to_mongolian_letter('j', KLetter::Ka), None);
+
+    // 2. `get_standard_latin` / `menk_char_latin` cover all 236 Menk code points (`U+E264..=U+E34F`)
+    //    and round-trip cleanly into `latin_to_mongolian_letter` == `menk_char_letter`.
+    // 2. `get_standard_latin` 与 `menk_char_latin` 完整覆盖全部 236 个蒙科立码位且与 `menk_char_letter` 一致。
+    for cp in 0xE264u32..=0xE34F {
+        let ch = char::from_u32(cp).unwrap();
+        let lat = menk_char_latin(ch).unwrap();
+        assert_eq!(
+            get_standard_latin(&ch.to_string()).unwrap(),
+            lat.to_string()
+        );
+        assert_eq!(
+            latin_to_mongolian_letter(lat, KLetter::Ka),
+            menk_char_letter(ch, KLetter::Ka)
+        );
+        assert_eq!(
+            latin_to_mongolian_letter(lat, KLetter::Kha),
+            menk_char_letter(ch, KLetter::Kha)
+        );
+    }
+    assert_eq!(menk_char_latin('a'), None);
+    assert_eq!(
+        get_standard_latin("a"),
+        Err(MenkShapeError {
+            index: 0,
+            character: 'a'
+        })
+    );
+
+    // 3. End-to-end Menk word + optional Latin resolution: explicit `Some(...)`, default `None`,
+    //    Chachlag, FVS, multi-solution, case/alias, and `KLetter`.
+    // 3. 端到端蒙科立词串 + 可选拉丁求解：显式 `Some(...)`、默认 `None` 自动转写、分写字尾、FVS、多解、大小写/别名及 `'ᠺ'`/`'ᠻ'` 切换。
+    let baina_menk = "\u{E2C1}\u{E26C}\u{E281}\u{E2B6}\u{E26A}";
+    assert_eq!(get_standard_latin(baina_menk).unwrap(), "baina");
+    let baina = menk_word_and_latin_to_unicode(baina_menk, Some("Baina")).unwrap();
+    assert_eq!(unicodes(&baina), vec!["ᠪᠠᠢᠨ\u{180E}ᠠ"]);
+    assert_eq!(baina[0].fvs_count, 0);
+    assert!(!baina[0].used_greedy_fallback);
+    assert_eq!(
+        menk_word_and_latin_to_unicode(baina_menk, None).unwrap(),
+        baina
+    );
+
+    let du_menk = "\u{E310}\u{E2A7}";
+    assert_eq!(get_standard_latin(du_menk).unwrap(), "dʉ");
+    let du = menk_word_and_latin_to_unicode(du_menk, Some("dʉ")).unwrap();
+    assert_eq!(unicodes(&du), vec!["ᠳ\u{180B}ᠦ\u{180C}"]);
+    assert_eq!(
+        menk_word_and_latin_to_unicode(du_menk, Some("dü")).unwrap(),
+        du
+    );
+    assert_eq!(menk_word_and_latin_to_unicode(du_menk, None).unwrap(), du);
+
+    let zuil_menk = "\u{E318}\u{E2A9}\u{E27E}\u{E2F9}";
+    assert_eq!(get_standard_latin(zuil_menk).unwrap(), "zʉil");
+    let zuil = menk_word_and_latin_to_unicode(zuil_menk, None).unwrap();
+    assert_eq!(unicodes(&zuil), vec!["ᠵᠦᠢᠯ", "ᠵᠦ\u{180D}ᠢᠯ"]);
+    assert_eq!(zuil[0].fvs_count, 0);
+    assert_eq!(zuil[1].fvs_count, 1);
+    assert_eq!(
+        menk_word_and_latin_to_unicode(zuil_menk, Some("zʉil")).unwrap(),
+        zuil
+    );
+
+    let kino_menk = "\u{E333}\u{E27F}\u{E2B9}\u{E286}";
+    assert_eq!(get_standard_latin(kino_menk).unwrap(), "kino");
+    assert_eq!(
+        unicodes(&menk_word_and_latin_to_unicode(kino_menk, None).unwrap()),
+        vec!["ᠺᠢᠨᠣ\u{180B}"]
+    );
+    assert_eq!(
+        unicodes(&menk_word_and_latin_to_unicode_with_k(kino_menk, None, KLetter::Kha).unwrap()),
+        vec!["ᠻᠢᠨᠣ\u{180B}"]
+    );
+    assert_eq!(
+        unicodes(
+            &menk_word_and_latin_to_unicode_with_k(kino_menk, Some("kino"), KLetter::Kha).unwrap()
+        ),
+        vec!["ᠻᠢᠨᠣ\u{180B}"]
+    );
+
+    assert_eq!(
+        menk_word_and_latin_to_unicode("", None).unwrap(),
+        vec![Solution {
+            unicode: String::new(),
+            fvs_count: 0,
+            letters: Vec::new(),
+            used_greedy_fallback: false,
+        }]
+    );
+    assert_eq!(
+        menk_word_and_latin_to_unicode("", Some("")).unwrap(),
+        menk_word_and_latin_to_unicode("", None).unwrap()
+    );
+
+    // 4. Error reporting for invalid Menk char, invalid Latin char, and shape mismatch.
+    // 4. 错误变体校验：非法蒙科立字符、非法拉丁字符、字形不匹配。
+    assert_eq!(
+        menk_word_and_latin_to_unicode("abc", None),
+        Err(ResolveError::InvalidMenkChar(MenkShapeError {
+            index: 0,
+            character: 'a'
+        }))
+    );
+    assert_eq!(
+        menk_word_and_latin_to_unicode("abc", Some("abc")),
+        Err(ResolveError::InvalidMenkChar(MenkShapeError {
+            index: 0,
+            character: 'a'
+        }))
+    );
+    assert_eq!(
+        menk_word_and_latin_to_unicode("\u{E2FD}\u{E268}", Some("s-a")),
+        Err(ResolveError::InvalidLatin {
+            index: 1,
+            character: '-'
+        })
+    );
+    assert_eq!(
+        menk_word_and_latin_to_unicode("\u{E2FD}\u{E268}", Some("ba")),
+        Err(ResolveError::ShapeMismatch)
     );
 }
