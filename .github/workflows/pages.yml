@@ -1,0 +1,81 @@
+name: Deploy WASM Demo to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'web/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build WASM demo
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+          targets: wasm32-unknown-unknown
+
+      - name: Read pinned wasm-bindgen version
+        id: bindgen
+        run: |
+          version=$(python3 -c 'import tomllib, pathlib; data=tomllib.loads(pathlib.Path("web/wasm/Cargo.lock").read_text()); print(next(p["version"] for p in data["package"] if p["name"] == "wasm-bindgen"))')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Cache wasm-bindgen-cli
+        id: cache-bindgen
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/wasm-bindgen
+          key: wasm-bindgen-cli-${{ runner.os }}-${{ steps.bindgen.outputs.version }}
+
+      - name: Install wasm-bindgen-cli
+        if: steps.cache-bindgen.outputs.cache-hit != 'true'
+        run: cargo install wasm-bindgen-cli --version "${{ steps.bindgen.outputs.version }}" --locked
+
+      - name: Check WASM crate
+        run: |
+          cargo fmt --manifest-path web/wasm/Cargo.toml --check
+          cargo clippy --manifest-path web/wasm/Cargo.toml --target wasm32-unknown-unknown --locked -- -D warnings
+
+      - name: Build static site
+        run: |
+          ./web/build.sh
+          touch web/public/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/public
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
