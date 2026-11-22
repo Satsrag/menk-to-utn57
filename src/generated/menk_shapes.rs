@@ -385,8 +385,8 @@ pub const fn menk_char_shapes(ch: char) -> Option<&'static [MenkShape]> {
         | '' // U+E298 (ɵ)
         | '' // U+E2A4 (ʉ)
         | '' => Some(&[Ue]), // U+E2A5 (ʉ)
-        '' // U+E2AF (ee)
-        | '' // U+E2B0 (ee)
+        '' // U+E2AF (ë)
+        | '' // U+E2B0 (ë)
         | '' // U+E329 (w)
         | '' // U+E32A (w)
         | '' => Some(&[W]), // U+E32C (w)
@@ -491,12 +491,12 @@ pub const fn menk_char_shapes(ch: char) -> Option<&'static [MenkShape]> {
         '' // U+E342 (ž)
         | '' // U+E343 (ž)
         | '' => Some(&[Z]), // U+E344 (ž)
-        '' // U+E346 (hr)
-        | '' // U+E347 (hr)
-        | '' => Some(&[Hr]), // U+E34E (zh)
-        '' // U+E348 (rh)
-        | '' // U+E349 (rh)
-        | '' => Some(&[Rh]), // U+E34A (rh)
+        '' // U+E346 (ħ)
+        | '' // U+E347 (ħ)
+        | '' => Some(&[Hr]), // U+E34E (ẑ)
+        '' // U+E348 (ř)
+        | '' // U+E349 (ř)
+        | '' => Some(&[Rh]), // U+E34A (ř)
         '' => Some(&[A_INIT, A_FINA]), // U+E264 (a)
         '' // U+E265 (a)
         | '' => Some(&[A_INIT, Aa]), // U+E270 (e)
@@ -514,20 +514,20 @@ pub const fn menk_char_shapes(ch: char) -> Option<&'static [MenkShape]> {
         | '' => Some(&[A_INIT, O, I]), // U+E2A2 (ʉ)
         '' // U+E293 (ɵ)
         | '' => Some(&[A_INIT, Ue]), // U+E2A0 (ʉ)
-        '' // U+E2AD (ee)
-        | '' => Some(&[A_INIT, W]), // U+E2AE (ee)
-        '' => Some(&[A_INIT, Hr]), // U+E345 (hr)
+        '' // U+E2AD (ë)
+        | '' => Some(&[A_INIT, W]), // U+E2AE (ë)
+        '' => Some(&[A_INIT, Hr]), // U+E345 (ħ)
         '' // U+E26B (a)
         | '' => Some(&[A_MEDI, Aa]), // U+E275 (e)
         '' // U+E26E (a)
         | '' // U+E2D8 (h)
         | '' // U+E2DC (h)
         | '' => Some(&[A_MEDI, A_MEDI]), // U+E2EE (g)
-        '' // U+E2BC (ng)
-        | '' // U+E2BD (ng)
-        | '' => Some(&[A_MEDI, G]), // U+E2BE (ng)
+        '' // U+E2BC (ŋ)
+        | '' // U+E2BD (ŋ)
+        | '' => Some(&[A_MEDI, G]), // U+E2BE (ŋ)
         '' => Some(&[A_MEDI, I]), // U+E27D (i)
-        '' => Some(&[A_MEDI, I, Aa]), // U+E2BB (ng)
+        '' => Some(&[A_MEDI, I, Aa]), // U+E2BB (ŋ)
         '' // U+E288 (o)
         | '' => Some(&[A_MEDI, O]), // U+E290 (u)
         '' // U+E29B (ɵ)
@@ -541,13 +541,13 @@ pub const fn menk_char_shapes(ch: char) -> Option<&'static [MenkShape]> {
         | '' // U+E29D (ɵ)
         | '' // U+E2A9 (ʉ)
         | '' => Some(&[O, I]), // U+E2AA (ʉ)
-        '' => Some(&[O, O]), // U+E34F (ch)
+        '' => Some(&[O, O]), // U+E34F (ĉ)
         '' // U+E2D9 (h)
         | '' // U+E2EA (g)
         | '' => Some(&[N_MEDI, N_MEDI]), // U+E2EC (g)
-        '' => Some(&[L_INIT, Hr]), // U+E34B (lh)
-        '' // U+E34C (lh)
-        | '' => Some(&[L_MEDI, Hr]), // U+E34D (lh)
+        '' => Some(&[L_INIT, Hr]), // U+E34B (ł)
+        '' // U+E34C (ł)
+        | '' => Some(&[L_MEDI, Hr]), // U+E34D (ł)
         _ => None,
     }
 }
@@ -577,8 +577,8 @@ pub const fn is_menk_char_only_init(ch: char) -> bool {
         | '' // U+E2A0 (ʉ)
         | '' // U+E2A1 (ʉ)
         | '' // U+E2A2 (ʉ)
-        | '' // U+E2AD (ee)
-        | '' // U+E2AE (ee)
+        | '' // U+E2AD (ë)
+        | '' // U+E2AE (ë)
         | '' // U+E2B1 (n)
         | '' // U+E2B2 (n)
         | '' // U+E2B3 (n)
@@ -595,8 +595,8 @@ pub const fn is_menk_char_only_init(ch: char) -> bool {
         | '' // U+E2F2 (m)
         | '' // U+E2F7 (l)
         | '' // U+E2F8 (l)
-        | '' // U+E345 (hr)
-        | '' // U+E34B (lh)
+        | '' // U+E345 (ħ)
+        | '' // U+E34B (ł)
     )
 }
 
@@ -623,11 +623,11 @@ pub const fn is_menk_char_only_fina(ch: char) -> bool {
         | '' // U+E2A0 (ʉ)
         | '' // U+E2A4 (ʉ)
         | '' // U+E2A5 (ʉ)
-        | '' // U+E2AD (ee)
-        | '' // U+E2AF (ee)
+        | '' // U+E2AD (ë)
+        | '' // U+E2AF (ë)
         | '' // U+E2B5 (n)
         | '' // U+E2B6 (n)
-        | '' // U+E2BB (ng)
+        | '' // U+E2BB (ŋ)
         | '' // U+E2C3 (b)
         | '' // U+E2C4 (b)
         | '' // U+E2CA (p)
@@ -652,8 +652,8 @@ pub const fn is_menk_char_only_fina(ch: char) -> bool {
         | '' // U+E33B (k)
         | '' // U+E340 (č)
         | '' // U+E343 (ž)
-        | '' // U+E346 (hr)
-        | '' // U+E34A (rh)
+        | '' // U+E346 (ħ)
+        | '' // U+E34A (ř)
     )
 }
 
@@ -683,4 +683,249 @@ pub fn get_shape(text: &str) -> String {
         }
     }
     out
+}
+
+/// Return the approximate Unicode Mongolian letter (`U+1820..=U+1842`) of a Menk PUA character (`U+E264..=U+E34F`).
+///
+/// 获取单个孟克字符（`U+E264..=U+E34F`）对应的粗略蒙古文 Unicode 基础字母（`U+1820..=U+1842`，不含 FVS / MVS）。
+pub const fn menk_char_letter(ch: char, k_letter: crate::KLetter) -> Option<char> {
+    match ch {
+        '' // U+E264
+        | '' // U+E265
+        | '' // U+E266
+        | '' // U+E267
+        | '' // U+E268
+        | '' // U+E269
+        | '' // U+E26A
+        | '' // U+E26B
+        | '' // U+E26C
+        | '' // U+E26D
+        | '' // U+E26E
+        | '' => Some('ᠠ'), // U+E26F -> U+1820
+        '' // U+E270
+        | '' // U+E271
+        | '' // U+E272
+        | '' // U+E273
+        | '' // U+E274
+        | '' // U+E275
+        | '' // U+E276
+        | '' // U+E277
+        | '' => Some('ᠡ'), // U+E278 -> U+1821
+        '' // U+E279
+        | '' // U+E27A
+        | '' // U+E27B
+        | '' // U+E27C
+        | '' // U+E27D
+        | '' // U+E27E
+        | '' // U+E27F
+        | '' // U+E280
+        | '' // U+E281
+        | '' => Some('ᠢ'), // U+E282 -> U+1822
+        '' // U+E283
+        | '' // U+E284
+        | '' // U+E285
+        | '' // U+E286
+        | '' // U+E287
+        | '' // U+E288
+        | '' // U+E289
+        | '' => Some('ᠣ'), // U+E28A -> U+1823
+        '' // U+E28B
+        | '' // U+E28C
+        | '' // U+E28D
+        | '' // U+E28E
+        | '' // U+E28F
+        | '' // U+E290
+        | '' // U+E291
+        | '' => Some('ᠤ'), // U+E292 -> U+1824
+        '' // U+E293
+        | '' // U+E294
+        | '' // U+E295
+        | '' // U+E296
+        | '' // U+E297
+        | '' // U+E298
+        | '' // U+E299
+        | '' // U+E29A
+        | '' // U+E29B
+        | '' // U+E29C
+        | '' // U+E29D
+        | '' // U+E29E
+        | '' => Some('ᠥ'), // U+E29F -> U+1825
+        '' // U+E2A0
+        | '' // U+E2A1
+        | '' // U+E2A2
+        | '' // U+E2A3
+        | '' // U+E2A4
+        | '' // U+E2A5
+        | '' // U+E2A6
+        | '' // U+E2A7
+        | '' // U+E2A8
+        | '' // U+E2A9
+        | '' // U+E2AA
+        | '' // U+E2AB
+        | '' => Some('ᠦ'), // U+E2AC -> U+1826
+        '' // U+E2AD
+        | '' // U+E2AE
+        | '' // U+E2AF
+        | '' => Some('ᠧ'), // U+E2B0 -> U+1827
+        '' // U+E2B1
+        | '' // U+E2B2
+        | '' // U+E2B3
+        | '' // U+E2B4
+        | '' // U+E2B5
+        | '' // U+E2B6
+        | '' // U+E2B7
+        | '' // U+E2B8
+        | '' // U+E2B9
+        | '' // U+E2BA
+        | '' // U+E2BF
+        | '' => Some('ᠨ'), // U+E2C0 -> U+1828
+        '' // U+E2BB
+        | '' // U+E2BC
+        | '' // U+E2BD
+        | '' => Some('ᠩ'), // U+E2BE -> U+1829
+        '' // U+E2C1
+        | '' // U+E2C2
+        | '' // U+E2C3
+        | '' // U+E2C4
+        | '' // U+E2C5
+        | '' // U+E2C6
+        | '' => Some('ᠪ'), // U+E2C7 -> U+182A
+        '' // U+E2C8
+        | '' // U+E2C9
+        | '' // U+E2CA
+        | '' // U+E2CB
+        | '' // U+E2CC
+        | '' => Some('ᠫ'), // U+E2CD -> U+182B
+        '' // U+E2CE
+        | '' // U+E2CF
+        | '' // U+E2D0
+        | '' // U+E2D1
+        | '' // U+E2D2
+        | '' // U+E2D3
+        | '' // U+E2D4
+        | '' // U+E2D5
+        | '' // U+E2D6
+        | '' // U+E2D7
+        | '' // U+E2D8
+        | '' // U+E2D9
+        | '' // U+E2DA
+        | '' // U+E2DB
+        | '' // U+E2DC
+        | '' // U+E2DD
+        | '' // U+E2DE
+        | '' // U+E2DF
+        | '' => Some('ᠬ'), // U+E2E0 -> U+182C
+        '' // U+E2E1
+        | '' // U+E2E2
+        | '' // U+E2E3
+        | '' // U+E2E4
+        | '' // U+E2E5
+        | '' // U+E2E6
+        | '' // U+E2E7
+        | '' // U+E2E8
+        | '' // U+E2E9
+        | '' // U+E2EA
+        | '' // U+E2EB
+        | '' // U+E2EC
+        | '' // U+E2ED
+        | '' // U+E2EE
+        | '' // U+E2EF
+        | '' => Some('ᠭ'), // U+E2F0 -> U+182D
+        '' // U+E2F1
+        | '' // U+E2F2
+        | '' // U+E2F3
+        | '' // U+E2F4
+        | '' // U+E2F5
+        | '' => Some('ᠮ'), // U+E2F6 -> U+182E
+        '' // U+E2F7
+        | '' // U+E2F8
+        | '' // U+E2F9
+        | '' // U+E2FA
+        | '' // U+E2FB
+        | '' => Some('ᠯ'), // U+E2FC -> U+182F
+        '' // U+E2FD
+        | '' // U+E2FE
+        | '' // U+E2FF
+        | '' // U+E300
+        | '' // U+E301
+        | '' => Some('ᠰ'), // U+E302 -> U+1830
+        '' // U+E303
+        | '' // U+E304
+        | '' // U+E305
+        | '' // U+E306
+        | '' => Some('ᠱ'), // U+E307 -> U+1831
+        '' // U+E308
+        | '' // U+E309
+        | '' // U+E30A
+        | '' // U+E30B
+        | '' // U+E30C
+        | '' => Some('ᠲ'), // U+E30D -> U+1832
+        '' // U+E30E
+        | '' // U+E30F
+        | '' // U+E310
+        | '' // U+E311
+        | '' // U+E312
+        | '' // U+E313
+        | '' => Some('ᠳ'), // U+E314 -> U+1833
+        '' // U+E315
+        | '' // U+E316
+        | '' => Some('ᠴ'), // U+E317 -> U+1834
+        '' // U+E318
+        | '' // U+E319
+        | '' // U+E31A
+        | '' // U+E31B
+        | '' // U+E31C
+        | '' => Some('ᠵ'), // U+E31D -> U+1835
+        '' // U+E31E
+        | '' // U+E31F
+        | '' // U+E320
+        | '' => Some('ᠶ'), // U+E321 -> U+1836
+        '' // U+E322
+        | '' // U+E323
+        | '' // U+E324
+        | '' // U+E325
+        | '' // U+E326
+        | '' // U+E327
+        | '' => Some('ᠷ'), // U+E328 -> U+1837
+        '' // U+E329
+        | '' // U+E32A
+        | '' // U+E32B
+        | '' => Some('ᠸ'), // U+E32C -> U+1838
+        '' // U+E32D
+        | '' // U+E32E
+        | '' // U+E32F
+        | '' // U+E330
+        | '' // U+E331
+        | '' => Some('ᠹ'), // U+E332 -> U+1839
+        '' // U+E333
+        | '' // U+E334
+        | '' // U+E335
+        | '' // U+E336
+        | '' // U+E337
+        | '' // U+E338
+        | '' // U+E339
+        | '' // U+E33A
+        | '' // U+E33B
+        | '' // U+E33C
+        | '' // U+E33D
+        | '' => Some(k_letter.as_char()), // U+E33E -> U+183A / U+183B
+        '' // U+E33F
+        | '' // U+E340
+        | '' => Some('ᠼ'), // U+E341 -> U+183C
+        '' // U+E342
+        | '' // U+E343
+        | '' => Some('ᠽ'), // U+E344 -> U+183D
+        '' // U+E345
+        | '' // U+E346
+        | '' => Some('ᠾ'), // U+E347 -> U+183E
+        '' // U+E348
+        | '' // U+E349
+        | '' => Some('ᠿ'), // U+E34A -> U+183F
+        '' // U+E34B
+        | '' // U+E34C
+        | '' => Some('ᡀ'), // U+E34D -> U+1840
+        '' => Some('ᡁ'), // U+E34E -> U+1841
+        '' => Some('ᡂ'), // U+E34F -> U+1842
+        _ => None,
+    }
 }

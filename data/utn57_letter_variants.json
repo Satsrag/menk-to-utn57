@@ -1,0 +1,317 @@
+{
+  "U+1820": {
+    "char": "ᠠ", "latin": "a", "alias": "A",
+    "variants": {
+      "isol": [{"fvs": 1, "written": ["A"], "default": false}, {"fvs": 2, "written": ["Aa"], "default": false}, {"fvs": 3, "written": ["A", "A"], "default": true}],
+      "init": [{"fvs": 1, "written": ["A"], "default": false}, {"fvs": 2, "written": ["A", "A"], "default": true}],
+      "medi": [{"fvs": null, "written": ["A"], "default": true}, {"fvs": 1, "written": ["A", "A"], "default": false}],
+      "fina": [{"fvs": 1, "written": ["Aa"], "default": false}, {"fvs": 2, "written": ["A"], "default": true}]
+    }
+  },
+  "U+1821": {
+    "char": "ᠡ", "latin": "e", "alias": "E",
+    "variants": {
+      "isol": [{"fvs": 1, "written": ["Aa"], "default": false}, {"fvs": 2, "written": ["A"], "default": true}],
+      "init": [{"fvs": null, "written": ["A"], "default": true}, {"fvs": 1, "written": ["A", "A"], "default": false}],
+      "medi": [{"fvs": null, "written": ["A"], "default": true}],
+      "fina": [{"fvs": 1, "written": ["Aa"], "default": false}, {"fvs": 2, "written": ["A"], "default": true}]
+    }
+  },
+  "U+1822": {
+    "char": "ᠢ", "latin": "i", "alias": "I",
+    "variants": {
+      "isol": [{"fvs": 1, "written": ["I"], "default": false}, {"fvs": 2, "written": ["Ix"], "default": false}, {"fvs": 3, "written": ["A", "I"], "default": true}],
+      "init": [{"fvs": 1, "written": ["I"], "default": false}, {"fvs": 2, "written": ["A", "I"], "default": true}],
+      "medi": [{"fvs": 1, "written": ["A", "I"], "default": false}, {"fvs": 2, "written": ["I", "I"], "default": false}, {"fvs": 3, "written": ["I"], "default": true}],
+      "fina": [{"fvs": null, "written": ["I"], "default": true}]
+    }
+  },
+  "U+1823": {
+    "char": "ᠣ", "latin": "o", "alias": "O",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["A", "O"], "default": true}],
+      "init": [{"fvs": null, "written": ["A", "O"], "default": true}],
+      "medi": [{"fvs": null, "written": ["O"], "default": true}, {"fvs": 1, "written": ["A", "O"], "default": false}],
+      "fina": [{"fvs": 1, "written": ["O"], "default": false}, {"fvs": 2, "written": ["U"], "default": true}]
+    }
+  },
+  "U+1824": {
+    "char": "ᠤ", "latin": "u", "alias": "U",
+    "variants": {
+      "isol": [{"fvs": 1, "written": ["U"], "default": false}, {"fvs": 2, "written": ["Ux"], "default": false}, {"fvs": 3, "written": ["A", "O"], "default": true}],
+      "init": [{"fvs": 1, "written": ["O"], "default": false}, {"fvs": 2, "written": ["A", "O"], "default": true}],
+      "medi": [{"fvs": null, "written": ["O"], "default": true}, {"fvs": 1, "written": ["A", "O"], "default": false}],
+      "fina": [{"fvs": 1, "written": ["O"], "default": false}, {"fvs": 2, "written": ["U"], "default": true}]
+    }
+  },
+  "U+1825": {
+    "char": "ᠥ", "latin": "ɵ", "alias": "Oe",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["A", "Ue"], "default": true}, {"fvs": 1, "written": ["A", "U"], "default": false}],
+      "init": [{"fvs": null, "written": ["A", "O", "I"], "default": true}],
+      "medi": [{"fvs": 1, "written": ["O", "I"], "default": false}, {"fvs": 2, "written": ["A", "O", "I"], "default": false}, {"fvs": 3, "written": ["O"], "default": true}],
+      "fina": [{"fvs": 1, "written": ["Ue"], "default": false}, {"fvs": 2, "written": ["O"], "default": false}, {"fvs": 3, "written": ["U"], "default": true}]
+    }
+  },
+  "U+1826": {
+    "char": "ᠦ", "latin": "ʉ", "alias": "Ue",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["A", "Ue"], "default": true}, {"fvs": 1, "written": ["A", "U"], "default": false}, {"fvs": 2, "written": ["U"], "default": false}, {"fvs": 3, "written": ["Ux"], "default": false}],
+      "init": [{"fvs": 1, "written": ["O"], "default": false}, {"fvs": 2, "written": ["A", "O", "I"], "default": true}],
+      "medi": [{"fvs": 1, "written": ["O", "I"], "default": false}, {"fvs": 2, "written": ["A", "O", "I"], "default": false}, {"fvs": 3, "written": ["O"], "default": true}],
+      "fina": [{"fvs": 1, "written": ["Ue"], "default": false}, {"fvs": 2, "written": ["O"], "default": false}, {"fvs": 3, "written": ["U"], "default": true}]
+    }
+  },
+  "U+1827": {
+    "char": "ᠧ", "latin": "ë", "alias": "Ee",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["A", "W"], "default": true}],
+      "init": [{"fvs": null, "written": ["A", "W"], "default": true}],
+      "medi": [{"fvs": null, "written": ["W"], "default": true}],
+      "fina": [{"fvs": null, "written": ["W"], "default": true}]
+    }
+  },
+  "U+1828": {
+    "char": "ᠨ", "latin": "n", "alias": "N",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["N"], "default": true}, {"fvs": 1, "written": ["A"], "default": false}],
+      "init": [{"fvs": null, "written": ["N"], "default": true}, {"fvs": 1, "written": ["A"], "default": false}],
+      "medi": [{"fvs": 1, "written": ["N"], "default": false}, {"fvs": 2, "written": ["A"], "default": true}],
+      "fina": [{"fvs": 1, "written": ["N"], "default": false}, {"fvs": 2, "written": ["A"], "default": true}]
+    }
+  },
+  "U+1829": {
+    "char": "ᠩ", "latin": "ŋ", "alias": "Ng",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["A", "G"], "default": true}],
+      "init": [{"fvs": null, "written": ["A", "G"], "default": true}],
+      "medi": [{"fvs": null, "written": ["A", "G"], "default": true}],
+      "fina": [{"fvs": null, "written": ["A", "G"], "default": true}]
+    }
+  },
+  "U+182A": {
+    "char": "ᠪ", "latin": "b", "alias": "B",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["B"], "default": true}],
+      "init": [{"fvs": null, "written": ["B"], "default": true}],
+      "medi": [{"fvs": null, "written": ["B"], "default": true}],
+      "fina": [{"fvs": null, "written": ["B"], "default": true}, {"fvs": 1, "written": ["B2"], "default": false}]
+    }
+  },
+  "U+182B": {
+    "char": "ᠫ", "latin": "p", "alias": "P",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["P"], "default": true}],
+      "init": [{"fvs": null, "written": ["P"], "default": true}],
+      "medi": [{"fvs": null, "written": ["P"], "default": true}],
+      "fina": [{"fvs": null, "written": ["P"], "default": true}]
+    }
+  },
+  "U+182C": {
+    "char": "ᠬ", "latin": "h", "alias": "H",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["H"], "default": true}, {"fvs": 1, "written": ["Hx"], "default": false}, {"fvs": 2, "written": ["G"], "default": false}, {"fvs": 4, "written": ["Gx"], "default": false}],
+      "init": [{"fvs": 1, "written": ["Hx"], "default": false}, {"fvs": 2, "written": ["G"], "default": false}, {"fvs": 3, "written": ["H"], "default": true}, {"fvs": 4, "written": ["Gx"], "default": false}],
+      "medi": [{"fvs": 1, "written": ["Hx"], "default": false}, {"fvs": 2, "written": ["G"], "default": true}, {"fvs": 3, "written": ["H"], "default": false}, {"fvs": 4, "written": ["Gx"], "default": false}],
+      "fina": [{"fvs": null, "written": ["H"], "default": true}, {"fvs": 1, "written": ["Hx"], "default": false}]
+    }
+  },
+  "U+182D": {
+    "char": "ᠭ", "latin": "g", "alias": "G",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["Hx"], "default": true}, {"fvs": 1, "written": ["H"], "default": false}, {"fvs": 2, "written": ["G"], "default": false}, {"fvs": 4, "written": ["Gx"], "default": false}],
+      "init": [{"fvs": 1, "written": ["H"], "default": false}, {"fvs": 2, "written": ["G"], "default": false}, {"fvs": 3, "written": ["Hx"], "default": true}, {"fvs": 4, "written": ["Gx"], "default": false}],
+      "medi": [{"fvs": 1, "written": ["Hx"], "default": false}, {"fvs": 2, "written": ["G"], "default": true}, {"fvs": 3, "written": ["H"], "default": false}, {"fvs": 4, "written": ["Gx"], "default": false}],
+      "fina": [{"fvs": 1, "written": ["H"], "default": false}, {"fvs": 2, "written": ["G"], "default": true}, {"fvs": 3, "written": ["Hx"], "default": false}]
+    }
+  },
+  "U+182E": {
+    "char": "ᠮ", "latin": "m", "alias": "M",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["M"], "default": true}],
+      "init": [{"fvs": null, "written": ["M"], "default": true}],
+      "medi": [{"fvs": null, "written": ["M"], "default": true}],
+      "fina": [{"fvs": null, "written": ["M"], "default": true}]
+    }
+  },
+  "U+182F": {
+    "char": "ᠯ", "latin": "l", "alias": "L",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["L"], "default": true}],
+      "init": [{"fvs": null, "written": ["L"], "default": true}],
+      "medi": [{"fvs": null, "written": ["L"], "default": true}],
+      "fina": [{"fvs": null, "written": ["L"], "default": true}]
+    }
+  },
+  "U+1830": {
+    "char": "ᠰ", "latin": "s", "alias": "S",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["S"], "default": true}],
+      "init": [{"fvs": null, "written": ["S"], "default": true}],
+      "medi": [{"fvs": null, "written": ["S"], "default": true}],
+      "fina": [{"fvs": null, "written": ["S"], "default": true}, {"fvs": 1, "written": ["Sz"], "default": false}]
+    }
+  },
+  "U+1831": {
+    "char": "ᠱ", "latin": "š", "alias": "Sh",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["Sh"], "default": true}, {"fvs": 1, "written": ["S"], "default": false}],
+      "init": [{"fvs": 1, "written": ["S"], "default": false}, {"fvs": 2, "written": ["Sh"], "default": true}],
+      "medi": [{"fvs": 1, "written": ["S"], "default": false}, {"fvs": 2, "written": ["Sh"], "default": true}],
+      "fina": [{"fvs": null, "written": ["Sh"], "default": true}]
+    }
+  },
+  "U+1832": {
+    "char": "ᠲ", "latin": "t", "alias": "T",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["T"], "default": true}],
+      "init": [{"fvs": null, "written": ["T"], "default": true}],
+      "medi": [{"fvs": 1, "written": ["T"], "default": false}, {"fvs": 2, "written": ["D"], "default": true}],
+      "fina": [{"fvs": null, "written": ["T"], "default": true}]
+    }
+  },
+  "U+1833": {
+    "char": "ᠳ", "latin": "d", "alias": "D",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["D"], "default": true}, {"fvs": 1, "written": ["T"], "default": false}],
+      "init": [{"fvs": 1, "written": ["D"], "default": false}, {"fvs": 2, "written": ["T"], "default": true}],
+      "medi": [{"fvs": 1, "written": ["D"], "default": false}, {"fvs": 2, "written": ["Dd"], "default": true}],
+      "fina": [{"fvs": null, "written": ["Dd"], "default": true}, {"fvs": 1, "written": ["D"], "default": false}]
+    }
+  },
+  "U+1834": {
+    "char": "ᠴ", "latin": "c", "alias": "Ch",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["Ch"], "default": true}],
+      "init": [{"fvs": null, "written": ["Ch"], "default": true}],
+      "medi": [{"fvs": null, "written": ["Ch"], "default": true}],
+      "fina": [{"fvs": null, "written": ["Ch"], "default": true}]
+    }
+  },
+  "U+1835": {
+    "char": "ᠵ", "latin": "z", "alias": "J",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["I"], "default": true}, {"fvs": 1, "written": ["I"], "default": false}],
+      "init": [{"fvs": null, "written": ["I"], "default": true}],
+      "medi": [{"fvs": null, "written": ["J"], "default": true}],
+      "fina": [{"fvs": null, "written": ["J"], "default": true}, {"fvs": 1, "written": ["I"], "default": false}]
+    }
+  },
+  "U+1836": {
+    "char": "ᠶ", "latin": "y", "alias": "Y",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["Y"], "default": true}, {"fvs": 1, "written": ["I"], "default": false}],
+      "init": [{"fvs": 1, "written": ["I"], "default": false}, {"fvs": 2, "written": ["Y"], "default": true}],
+      "medi": [{"fvs": 1, "written": ["I"], "default": false}, {"fvs": 2, "written": ["I", "I"], "default": false}, {"fvs": 3, "written": ["Y"], "default": true}],
+      "fina": [{"fvs": null, "written": ["I"], "default": true}]
+    }
+  },
+  "U+1837": {
+    "char": "ᠷ", "latin": "r", "alias": "R",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["R"], "default": true}],
+      "init": [{"fvs": null, "written": ["R"], "default": true}],
+      "medi": [{"fvs": null, "written": ["R"], "default": true}],
+      "fina": [{"fvs": null, "written": ["R"], "default": true}]
+    }
+  },
+  "U+1838": {
+    "char": "ᠸ", "latin": "w", "alias": "W",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["W"], "default": true}],
+      "init": [{"fvs": null, "written": ["W"], "default": true}],
+      "medi": [{"fvs": null, "written": ["W"], "default": true}, {"fvs": 1, "written": ["O"], "default": false}],
+      "fina": [{"fvs": null, "written": ["W"], "default": true}, {"fvs": 1, "written": ["U"], "default": false}]
+    }
+  },
+  "U+1839": {
+    "char": "ᠹ", "latin": "f", "alias": "F",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["F"], "default": true}],
+      "init": [{"fvs": null, "written": ["F"], "default": true}],
+      "medi": [{"fvs": null, "written": ["F"], "default": true}],
+      "fina": [{"fvs": null, "written": ["F"], "default": true}]
+    }
+  },
+  "U+183A": {
+    "char": "ᠺ", "latin": "k", "alias": "K2",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["K2"], "default": true}],
+      "init": [{"fvs": null, "written": ["K2"], "default": true}],
+      "medi": [{"fvs": null, "written": ["K2"], "default": true}],
+      "fina": [{"fvs": null, "written": ["K2"], "default": true}]
+    }
+  },
+  "U+183B": {
+    "char": "ᠻ", "latin": "k", "alias": "K",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["K"], "default": true}],
+      "init": [{"fvs": null, "written": ["K"], "default": true}],
+      "medi": [{"fvs": null, "written": ["K"], "default": true}],
+      "fina": [{"fvs": null, "written": ["K"], "default": true}]
+    }
+  },
+  "U+183C": {
+    "char": "ᠼ", "latin": "č", "alias": "C",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["C"], "default": true}],
+      "init": [{"fvs": null, "written": ["C"], "default": true}],
+      "medi": [{"fvs": null, "written": ["C"], "default": true}],
+      "fina": [{"fvs": null, "written": ["C"], "default": true}]
+    }
+  },
+  "U+183D": {
+    "char": "ᠽ", "latin": "ž", "alias": "Z",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["Z"], "default": true}],
+      "init": [{"fvs": null, "written": ["Z"], "default": true}],
+      "medi": [{"fvs": null, "written": ["Z"], "default": true}],
+      "fina": [{"fvs": null, "written": ["Z"], "default": true}]
+    }
+  },
+  "U+183E": {
+    "char": "ᠾ", "latin": "ħ", "alias": "Hh",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["A", "Hr"], "default": true}],
+      "init": [{"fvs": null, "written": ["A", "Hr"], "default": true}],
+      "medi": [{"fvs": null, "written": ["Hr"], "default": true}],
+      "fina": [{"fvs": null, "written": ["Hr"], "default": true}]
+    }
+  },
+  "U+183F": {
+    "char": "ᠿ", "latin": "ř", "alias": "Rh",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["Rh"], "default": true}],
+      "init": [{"fvs": null, "written": ["Rh"], "default": true}],
+      "medi": [{"fvs": null, "written": ["Rh"], "default": true}],
+      "fina": [{"fvs": null, "written": ["Rh"], "default": true}]
+    }
+  },
+  "U+1840": {
+    "char": "ᡀ", "latin": "ł", "alias": "Lh",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["L", "Hr"], "default": true}],
+      "init": [{"fvs": null, "written": ["L", "Hr"], "default": true}],
+      "medi": [{"fvs": null, "written": ["L", "Hr"], "default": true}],
+      "fina": [{"fvs": null, "written": ["L", "Hr"], "default": true}]
+    }
+  },
+  "U+1841": {
+    "char": "ᡁ", "latin": "ẑ", "alias": "Zr",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["Zr"], "default": true}],
+      "init": [{"fvs": null, "written": ["Zr"], "default": true}],
+      "medi": [{"fvs": null, "written": ["Zr"], "default": true}],
+      "fina": [{"fvs": null, "written": ["Zr"], "default": true}]
+    }
+  },
+  "U+1842": {
+    "char": "ᡂ", "latin": "ĉ", "alias": "Cr",
+    "variants": {
+      "isol": [{"fvs": null, "written": ["Cr"], "default": true}],
+      "init": [{"fvs": null, "written": ["Cr"], "default": true}],
+      "medi": [{"fvs": null, "written": ["Cr"], "default": true}],
+      "fina": [{"fvs": null, "written": ["Cr"], "default": true}]
+    }
+  }
+}

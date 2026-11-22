@@ -11,6 +11,6 @@ dependencies = [
 
 [[package]]
 name = "mongol-norm"
-version = "0.4.2"
+version = "0.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4942430651377af8ba4825bf3a7dba66711cef7be9ed0e6a98faf7c0b8f50156"
+checksum = "43c02d7b8181ac419c7cd7480855af90cbc67efc1855fe4eb7af437a9177e488"

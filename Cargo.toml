@@ -16,4 +16,4 @@ path = "src/lib.rs"
 
 [dependencies]
 # Pure-Rust UTN #57 shaping & normalization types / 纯 Rust UTN #57 塑形与归一化类型库
-mongol-norm = "0.4.2"
+mongol-norm = "0.4.4"

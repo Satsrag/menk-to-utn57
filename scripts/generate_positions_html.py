@@ -323,13 +323,13 @@ REVIEW_NOTES: dict[int, tuple[bool, str, str]] = {
     ),
     0xE348: (
         True,
-        "Initial 'rh'; shares glyph with Rh:medi",
-        "rh 首槽位，与 Rh:medi 同形",
+        "Initial 'ř'; shares glyph with Rh:medi",
+        "ř 首槽位，与 Rh:medi 同形",
     ),
     0xE34A: (
         True,
-        "Final tailed 'rh' (Rh:fina); strictly final",
-        "rh 词尾长尾形 (Rh:fina)，仅 final",
+        "Final tailed 'ř' (Rh:fina); strictly final",
+        "ř 词尾长尾形 (Rh:fina)，仅 final",
     ),
 }
 

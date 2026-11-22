@@ -3,7 +3,8 @@
 //! 孟克编码词串到 `MenkShape` 序列及 UTN #57 `PositionedWrittenUnit` 的转换逻辑。
 
 use crate::{
-    is_menk_char_only_fina, is_menk_char_only_init, menk_char_shapes, MenkShape, MenkShapeError,
+    is_menk_char_only_fina, is_menk_char_only_init, menk_char_letter, menk_char_shapes, KLetter,
+    MenkShape, MenkShapeError,
 };
 use mongol_norm::{Position, PositionedWrittenUnit};
 
@@ -26,6 +27,32 @@ fn flush_chain(chains: &mut Vec<Vec<MenkShape>>, current: &mut Vec<MenkShape>) {
     if !current.is_empty() {
         chains.push(std::mem::take(current));
     }
+}
+
+/// Approximate the pure Unicode Mongolian letter sequence (`U+1820..=U+1842`, without `MVS` or `FVS`)
+/// of a Menk PUA word (`U+E264..=U+E34F`), using [`KLetter::Ka`] (`'ᠺ'` `U+183A`) for `'k'`.
+///
+/// 获取孟克编码词串（`U+E264..=U+E34F`）对应的粗略纯蒙古文 Unicode 基础字母串（`U+1820..=U+1842`，不含 `MVS` / `FVS`，
+/// 默认将 `'k'` 映射为内蒙古标准 [`KLetter::Ka`] `'ᠺ'` `U+183A`，供测试与人工校对前预填使用）。
+pub fn get_standard_letters(word: &str) -> Result<String, MenkShapeError> {
+    get_standard_letters_with_k(word, KLetter::default())
+}
+
+/// Approximate the pure Unicode Mongolian letter sequence (`U+1820..=U+1842`, without `MVS` or `FVS`)
+/// of a Menk PUA word (`U+E264..=U+E34F`) with an explicit [`KLetter`] choice (`'ᠺ'` vs `'ᠻ'`).
+///
+/// 按指定的 [`KLetter`]（`'ᠺ'` `U+183A` 或 `'ᠻ'` `U+183B`）获取孟克编码词串对应的粗略纯蒙古文 Unicode 基础字母串（不含 `MVS` / `FVS`）。
+pub fn get_standard_letters_with_k(
+    word: &str,
+    k_letter: KLetter,
+) -> Result<String, MenkShapeError> {
+    let mut out = String::with_capacity(word.len());
+    for (index, character) in word.chars().enumerate() {
+        let ch =
+            menk_char_letter(character, k_letter).ok_or(MenkShapeError { index, character })?;
+        out.push(ch);
+    }
+    Ok(out)
 }
 
 /// Extract the [`MenkShape`] sequence of a Menk PUA word (`U+E264..=U+E34F`).
