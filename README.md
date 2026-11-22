@@ -1,6 +1,6 @@
 # menk-to-utn57
 
-[English](#english) | [中文](#中文) | [Live WASM Demo](https://satsrag.github.io/menk-to-utn57/)
+[English](#english) | [中文](#中文) | [Live WASM Demo](https://www.satsrag.dev/menk-to-utn57/)
 
 ---
 
